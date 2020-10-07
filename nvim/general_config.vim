@@ -4,12 +4,6 @@ set number
 " Fix backspace indent
 set backspace=indent,eol,start
 
-" Tabs config
-set tabstop=2
-set softtabstop=0
-set shiftwidth=2
-set expandtab
-
 " Enable hidden buffers
 set hidden
 
