@@ -1,12 +1,6 @@
 " Remove buffers menun
 let no_buffers_menu=1
 
-" Set colorscheme
-silent! colorscheme molokai
-
-" Colorscheme config
-let g:CSApprox_loaded = 1
-
 " IndentLine
 let g:indentLine_enabled = 1
 let g:indentLine_concealcursor = 0
@@ -20,8 +14,8 @@ set laststatus=2
 set modeline
 set modelines=10
 
-set title
-set titleold="Terminal"
-set titlestring=%F
-
+" Status line
 set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
+
+" Enabled rgb colors
+set termguicolors

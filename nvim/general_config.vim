@@ -1,12 +1,6 @@
 " Set line numbers
 set number
 
-" Fix backspace indent
-set backspace=indent,eol,start
-
-" Enable hidden buffers
-set hidden
-
 " Show highlights on search
 set hlsearch
 

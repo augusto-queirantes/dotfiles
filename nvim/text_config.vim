@@ -17,7 +17,6 @@ set smartindent
 " Show preview
 set inccommand=split
 
-
 " Enable syntax highlighting
 syntax enable
 

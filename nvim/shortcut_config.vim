@@ -1,6 +1,17 @@
 " Set leader key
 let mapleader = " "
 
+" Copy
+vnoremap <C-c> y: call system("xclip -i", getreg("\""))<CR>
+
+" Cut
+vmap <C-x> "+c
+
+" Paste
+imap <C-v> <C-r><C-o>+
+vmap <C-v> p
+nnoremap <C-v> p"
+
 " Fast saving
 nmap <C-s> :w!<cr>
 
@@ -88,3 +99,12 @@ noremap <leader>c :bd<CR>
 " Terminal related shortcuts
 tnoremap <Esc> <C-\><C-n>
 nnoremap <leader>t :terminal<CR>
+
+" Coc shortcuts
+
+" GoTo code navigation.
+nmap <silent> <C-Space> <Plug>(coc-definition)
+
+" Formatting selected code
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)

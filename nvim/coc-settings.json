@@ -1,0 +1,5 @@
+{
+  "coc.preferences.rootPatterns": [".gitmodules", ".vim"],
+
+  "solargraph.diagnostics": true
+}
