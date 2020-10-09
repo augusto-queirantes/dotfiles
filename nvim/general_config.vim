@@ -47,3 +47,6 @@ set mouse=a
 
 " Highlight current line
 set cursorline
+
+" To be able to use ctrl-c
+set clipboard=unnamedplus
