@@ -17,8 +17,8 @@ set autoread
 set undodir=~/.vim_runtime/temp_dirs/undodir
 set undofile
 
-" Set cursor position in the middle of the screen
-set so=999
+" Set cursor position
+set so=7
 
 "Always show current cursor position
 set ruler
