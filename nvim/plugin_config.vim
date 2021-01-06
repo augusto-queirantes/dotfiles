@@ -27,6 +27,9 @@ Plug 'tpope/vim-fugitive'
 " Intellisense
 Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
+" Elixir sintax highlight
+Plug 'elixir-editors/vim-elixir'
+
 call plug#end()
 
 " NerdTree config
