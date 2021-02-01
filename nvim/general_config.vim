@@ -50,3 +50,9 @@ set cursorline
 
 " To be able to use ctrl-c
 set clipboard=unnamedplus
+
+" Hidden tabs instead of close then
+set hidden
+
+" Set update time to avoid delays
+set updatetime=300

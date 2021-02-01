@@ -36,9 +36,6 @@ xnoremap <s-tab> <gv
 nnoremap <leader>vs :vsplit<cr>
 nnoremap <leader>s :split<cr>
 
-" Folder search shortcut
-nnoremap <C-F> :Ag<space>
-
 " File serach shortcut
 nnoremap <C-f> /
 
@@ -96,15 +93,5 @@ noremap <leader>j :bp<CR>
 noremap <leader>l :bn<CR>
 noremap <leader>c :bd<CR>
 
-" Terminal related shortcuts
-tnoremap <Esc> <C-\><C-n>
-nnoremap <leader>t :terminal<CR>
-
-" Coc shortcuts
-
-" GoTo code navigation.
-nmap <silent> <C-Space> <Plug>(coc-definition)
-
-" Formatting selected code
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" Vim commentary
+map <C-space> gcc
