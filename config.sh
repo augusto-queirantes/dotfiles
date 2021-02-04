@@ -19,3 +19,9 @@ echo_yellow 'Starting Neovim configuration'
 sh $(pwd)/nvim/config.sh
 
 echo_green 'Neovim were successfully configured'
+
+echo_yellow 'Starting terminal configuration'
+
+sh $(pwd)/terminal/config.sh
+
+echo_green 'Terminal were successfully configured'
