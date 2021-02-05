@@ -45,6 +45,9 @@ Plug 'tpope/vim-rails'
 " Vue support
 Plug 'posva/vim-vue'
 
+" Multiple cursos
+Plug 'mg979/vim-visual-multi'
+
 call plug#end()
 
 " NerdTree configuration
@@ -66,3 +69,8 @@ let g:ale_lint_on_save = 1
 " Deoplete
 let g:deoplete#enable_at_startup = 1
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" Multiple cursos configuration
+let g:VM_maps = {}
+let g:VM_maps['Find Under'] = '<C-d>'
+let g:VM_maps['Find Subword Under'] = '<C-d>'
