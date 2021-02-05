@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Log info
 RESTORE='\033[0m'
 
 function echo_yellow {
@@ -14,18 +15,21 @@ function echo_green {
   echo -e "${GREEN}$1${RESTORE}";
 }
 
+# Neovim configuration
 echo_yellow 'Starting Neovim configuration'
 
 sh $(pwd)/nvim/config.sh
 
 echo_green 'Neovim were successfully configured'
 
+# Terminal configuration
 echo_yellow 'Starting terminal configuration'
 
 sh $(pwd)/terminal/config.sh
 
 echo_green 'Terminal were successfully configured'
 
+# Mouse configuration
 echo_yellow 'Starting mouse configuration'
 
 sh $(pwd)/mouse/config.sh
