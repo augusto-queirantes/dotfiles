@@ -36,6 +36,9 @@ Plug 'dense-analysis/ale'
 " Code completion
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
+" Dockerfile support
+Plug 'ekalinin/Dockerfile.vim'
+
 call plug#end()
 
 " NerdTree configuration
