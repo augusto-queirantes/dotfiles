@@ -42,6 +42,9 @@ Plug 'ekalinin/Dockerfile.vim'
 " Rails support
 Plug 'tpope/vim-rails'
 
+" Vue support
+Plug 'posva/vim-vue'
+
 call plug#end()
 
 " NerdTree configuration
