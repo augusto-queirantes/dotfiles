@@ -13,7 +13,7 @@ cmake ..
 make
 sudo make install
 
-# Add configuration to default path
+# Build symbolic link to config file
 ln -sf $(pwd)/mouse/logid.cfg /etc/logid.cfg
 
 # Enable configuration on boot
