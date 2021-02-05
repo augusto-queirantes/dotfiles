@@ -29,8 +29,10 @@ export EDITOR='nvim'
 
 alias dkc="docker-compose"
 alias gti="git"
-alias vim="gnvim ."
-alias nvim="gnvim ."
+alias nvim="nvim ."
+alias vim="nvim ."
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
