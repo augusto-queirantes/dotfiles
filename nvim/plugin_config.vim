@@ -39,6 +39,9 @@ Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " Dockerfile support
 Plug 'ekalinin/Dockerfile.vim'
 
+" Rails support
+Plug 'tpope/vim-rails'
+
 call plug#end()
 
 " NerdTree configuration
