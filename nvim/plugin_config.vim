@@ -1,4 +1,4 @@
-call plug#begin()
+call plug#begin('~/.config/nvim/plugged')
 
 " NerdTree
 Plug 'scrooloose/nerdtree'
@@ -33,7 +33,8 @@ Plug 'tpope/vim-commentary'
 " Linting
 Plug 'dense-analysis/ale'
 
-Plug 'ycm-core/YouCompleteMe'
+" Code completion
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 call plug#end()
 
@@ -52,3 +53,7 @@ set nocompatible
 " Ale configuration
 let g:ale_lint_on_enter = 0
 let g:ale_lint_on_save = 1
+
+" Deoplete
+let g:deoplete#enable_at_startup = 1
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
