@@ -19,7 +19,7 @@ nmap <C-s> :w!<cr>
 map <silent> <Esc><Esc> :noh<cr>
 
 " NEREDTree tree view shortcut
-map <C-\> :NERDTreeFocus<cr>
+map <C-z> :NERDTreeFocus<cr>
 
 " NERDTreeFind shortcut
 map <leader>ff :NERDTreeFind<cr>
