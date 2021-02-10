@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Add dependencies
-sudo pacman -S cmake libevdev libconfig pkgconf
+sudo apt install -y cmake libevdev-dev libudev-dev libconfig++-dev git
 
 # Clone Repo
 git clone https://github.com/PixlOne/logiops ~/logiops
@@ -14,7 +14,7 @@ make
 sudo make install
 
 # Build symbolic link to config file
-ln -sf $(pwd)/mouse/logid.cfg /etc/logid.cfg
+sudo ln -sf $(pwd)/mouse/logid.cfg /etc/logid.cfg
 
 # Enable configuration on boot
 sudo systemctl enable --now logid

@@ -1,12 +1,18 @@
+#!/bin/bash
+
 # Log info
 function echo_yellow {
-  YELLOW='\e[0;33m'
+  YELLOW='\e[0;33m';
 
   echo -e "${YELLOW}$1${RESTORE}";
 }
 
-# Clone dependencies
-git clone https://github.com/ohmyzsh/ohmyzsh.git ~/.oh-my-zsh
+sudo apt install -y zsh curl
+
+# Install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Clone custom theme and plugin
 git clone https://github.com/zsh-users/zsh-autosuggestions $(pwd)/plugins/zsh-autosuggestions
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $(pwd)/themes/powerlevel10k
 
