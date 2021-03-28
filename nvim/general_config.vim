@@ -18,7 +18,7 @@ set undodir=~/.vim_runtime/temp_dirs/undodir
 set undofile
 
 " Set cursor position
-set so=7
+set so=3
 
 "Always show current cursor position
 set ruler
