@@ -37,7 +37,5 @@ alias vim="nvim ."
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# ASDF
-. $HOME/.asdf/asdf.sh
-
-export DATABASE_URL="postgres://postgres@postgres:5432/indiecampers_development"
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
