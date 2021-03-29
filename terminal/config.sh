@@ -7,18 +7,16 @@ function echo_yellow {
   echo -e "${YELLOW}$1${RESTORE}";
 }
 
-sudo apt install -y zsh curl
+sudo pacman -S zsh curl
 
-# Install zsh
+# Install ohzsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 # Clone custom theme and plugin
-git clone https://github.com/zsh-users/zsh-autosuggestions $(pwd)/plugins/zsh-autosuggestions
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git $(pwd)/themes/powerlevel10k
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/plugins/zsh-autosuggestions
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/.oh-my-zsh/themes/powerlevel10k
 
 # Build symbolic link to config file
-ln -sf $(pwd)/plugins/* ~/.oh-my-zsh/custom/plugins
-ln -sf $(pwd)/themes/* ~/.oh-my-zsh/custom/themes
 ln -sf $(pwd)/.zshrc ~/.zshrc
 
 # Set zsh as default shell
