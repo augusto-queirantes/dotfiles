@@ -1,9 +1,12 @@
 " Tabs config
 set tabstop=2
-set softtabstop=0
+set softtabstop=2
 set shiftwidth=2
 
+" Insert 2 spaces when pressing tab
 set expandtab
+
+" Be smart when using tabs
 set smarttab
 
 " Linebreak on 1000 characters
