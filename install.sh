@@ -1,6 +1,6 @@
 # Dependencies installation
 
-sudo apt install -y curl zsh git
+sudo apt install -y curl zsh git ripgrep
 
 # Oh my zsh installation
 
