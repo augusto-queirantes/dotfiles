@@ -17,5 +17,9 @@ sudo apt install -y neovim
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" >> /dev/null
 
 ## Oh my zsh configuration
-rm ~/.zshrc
-ln ./zsh/zshrc ~/.zshrc
+
+ln -fs $PWD/zsh/zshrc ~/.zshrc
+
+## Nvim configuration
+
+ln -fs $PWD/nvim ~/.config/nvim
