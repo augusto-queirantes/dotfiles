@@ -48,3 +48,4 @@ fc-cache -fv
 ## Nvm configuration
 
 https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl -sSL https://get.rvm.io | bash

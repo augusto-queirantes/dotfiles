@@ -20,3 +20,6 @@ export NVM_DIR="$HOME/.nvm"
 # Aliases
 
 alias update="sudo apt upgrade -y && sudo apt update -y"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
