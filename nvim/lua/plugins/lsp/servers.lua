@@ -25,7 +25,10 @@ return {
     },
   },
   tsserver = {},
-  ruby_lsp = {},
+  solargraph = {
+    diagnostics = true,
+    completion = true
+  },
   yamlls = {
     cmd = { "yaml-language-server", "--stdio" },
     filetypes = { "yaml" },

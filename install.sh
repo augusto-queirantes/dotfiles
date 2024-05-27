@@ -6,7 +6,7 @@ sudo apt upgrade -y && sudo apt update -y
 
 ## System dependencies
 
-sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev python3-pip jq
+sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev python3-pip jq fd-find
 
 ## Neovim installation
 
@@ -48,4 +48,7 @@ fc-cache -fv
 ## Nvm configuration
 
 https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+## Rvm configuration
+
 curl -sSL https://get.rvm.io | bash
