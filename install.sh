@@ -6,7 +6,7 @@ sudo apt upgrade -y && sudo apt update -y
 
 ## System dependencies
 
-sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev python3-pip jq fd-find
+sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev python3-pip jq fd-find meld
 
 ## Neovim installation
 
