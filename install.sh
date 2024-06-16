@@ -47,7 +47,7 @@ fc-cache -fv
 
 ## Nvm configuration
 
-https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
 ## Rvm configuration
 
