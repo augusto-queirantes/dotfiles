@@ -1,9 +1,9 @@
 return {
-  ui = {
-    Telescope = "",
-    BoldArrowDown = "",
-    BoldArrowLeft = "",
-    BoldArrowRight = "",
-    BoldArrowUp = "",
-  }
+	ui = {
+		Telescope = "",
+		BoldArrowDown = "",
+		BoldArrowLeft = "",
+		BoldArrowRight = "",
+		BoldArrowUp = "",
+	},
 }
