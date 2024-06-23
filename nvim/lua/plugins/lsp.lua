@@ -4,21 +4,12 @@ return {
 	dependencies = {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
-		"folke/neodev.nvim",
+		"folke/lazydev.nvim",
 		"b0o/schemastore.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
-		require("mason").setup({
-			ui = {
-				border = "rounded",
-				icons = {
-					package_installed = "✓",
-					package_pending = "➜",
-					package_uninstalled = "✗",
-				},
-			},
-		})
+		require("mason").setup()
 
 		require("mason-lspconfig").setup({
 			ensure_installed = vim.tbl_keys(require("lsp.servers")),
@@ -26,7 +17,7 @@ return {
 
 		require("lspconfig.ui.windows").default_options.border = "single"
 
-		require("neodev").setup()
+		require("lazydev").setup()
 
 		vim.api.nvim_create_autocmd("LspAttach", {
 			group = vim.api.nvim_create_augroup("lsp-attach", { clear = true }),
