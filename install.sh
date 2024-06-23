@@ -45,10 +45,19 @@ rm "$file_name"
 
 fc-cache -fv
 
-## Nvm configuration
+## Asdf configuration
 
-curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+## Clone asdf using the latest tag version as target branch
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch (git ls-remote --tags --sort="v:refname" https://github.com/asdf-vm/asdf.git | tail -n1 | sed 's/.*\///; s/\^{}//')
 
-## Rvm configuration
+asdf plugin add erlang https://github.com/asdf-vm/asdf-erlang.git
+asdf plugin add elixir https://github.com/asdf-vm/asdf-elixir.git
+asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
 
-curl -sSL https://get.rvm.io | bash
+asdf install erlang 27.0
+asdf install elixir 1.17.1
+asdf install nodejs 20.15.0
+
+asdf global erlang 27.0
+asdf global elixir 1.17.1
+asdf global nodejs 20.15.0
