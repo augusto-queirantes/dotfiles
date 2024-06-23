@@ -13,7 +13,6 @@ return {
 		config = function()
 			local telescope = require("telescope")
 			local actions = require("telescope.actions")
-			local trouble = require("trouble.sources.telescope")
 			local icons = require("config.icons")
 
 			vim.api.nvim_create_autocmd("FileType", {
@@ -33,10 +32,8 @@ return {
 						i = {
 							["<esc>"] = actions.close,
 							["<C-q>"] = actions.close,
-							["<C-t>"] = trouble.open,
 							["<C-u>"] = false,
 						},
-						n = { ["<C-t>"] = trouble.open },
 					},
 					path_display = {
 						"filename_first",
