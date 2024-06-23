@@ -10,47 +10,12 @@ return {
 		-- Adds LSP completion capabilities
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-path",
-
-		-- Adds a number of user-friendly snippets
-		"rafamadriz/friendly-snippets",
-
-		-- Adds vscode-like pictograms
-		"onsails/lspkind.nvim",
 	},
 	config = function()
 		local cmp = require("cmp")
 		local luasnip = require("luasnip")
-		local kind_icons = {
-			Text = "",
-			Method = "󰆧",
-			Function = "󰊕",
-			Constructor = "",
-			Field = "󰇽",
-			Variable = "󰂡",
-			Class = "󰠱",
-			Interface = "",
-			Module = "",
-			Property = "󰜢",
-			Unit = "",
-			Value = "󰎠",
-			Enum = "",
-			Keyword = "󰌋",
-			Snippet = "",
-			Color = "󰏘",
-			File = "󰈙",
-			Reference = "",
-			Folder = "󰉋",
-			EnumMember = "",
-			Constant = "󰏿",
-			Struct = "",
-			Event = "",
-			Operator = "󰆕",
-			TypeParameter = "󰅲",
-		}
 
-		require("luasnip.loaders.from_vscode").lazy_load()
-
-		luasnip.config.setup({})
+		luasnip.config.setup()
 
 		cmp.setup({
 			snippet = {
@@ -99,32 +64,8 @@ return {
 				{ name = "nvim_lsp" },
 				{ name = "nvim_lua" },
 				{ name = "luasnip" },
-				{ name = "buffer" },
 				{ name = "path" },
-				{ name = "calc" },
-				{ name = "emoji" },
 				{ name = "treesitter" },
-				{ name = "crates" },
-				{ name = "tmux" },
-			},
-			formatting = {
-				format = function(entry, vim_item)
-					local lspkind_ok, lspkind = pcall(require, "lspkind")
-
-					if not lspkind_ok then
-						vim_item.kind = string.format("%s %s", kind_icons[vim_item.kind], vim_item.kind)
-						vim_item.menu = ({
-							nvim_lsp = "[LSP]",
-							nvim_lua = "[Lua]",
-							luasnip = "[LuaSnip]",
-							buffer = "[Buffer]",
-						})[entry.source.name]
-
-						return vim_item
-					else
-						return lspkind.cmp_format()(entry, vim_item)
-					end
-				end,
 			},
 		})
 	end,
