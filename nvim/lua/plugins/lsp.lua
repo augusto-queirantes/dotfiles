@@ -5,7 +5,6 @@ return {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
 		"folke/lazydev.nvim",
-		"b0o/schemastore.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
