@@ -1,18 +1,19 @@
 #!/bin/bash
 
-# Dependencies installation
+# Dependencies related
 
 sudo apt upgrade -y && sudo apt update -y
-
-## System dependencies
-
 sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev python3-pip jq fd-find meld
 
-## Neovim installation
+# Neovim
 
 sudo snap install --beta nvim --classic
 
-## Oh my zsh installation
+## Nvim configuration
+
+ln -fs $PWD/nvim ~/.config/nvim
+
+# Oh my zsh
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" >> /dev/null
 
@@ -20,11 +21,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 ln -fs $PWD/zsh/zshrc ~/.zshrc
 
-## Nvim configuration
-
-ln -fs $PWD/nvim ~/.config/nvim
-
-## Font configuration
+# Font
 
 version=$(curl -s "https://api.github.com/repos/ryanoasis/nerd-fonts/tags" | jq -r '.[0].name')
 fonts_dir="${HOME}/.local/share/fonts"
@@ -43,7 +40,7 @@ rm "$file_name"
 
 fc-cache -fv
 
-## Asdf configuration
+# Asdf configuration
 
 ## Clone asdf using the latest tag version as target branch
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch (git ls-remote --tags --sort="v:refname" https://github.com/asdf-vm/asdf.git | tail -n1 | sed 's/.*\///; s/\^{}//')
@@ -59,3 +56,12 @@ asdf install nodejs 20.15.0
 asdf global erlang 27.0
 asdf global elixir 1.17.1
 asdf global nodejs 20.15.0
+
+# Sublime
+sudo snap install sublime-text --classic
+
+# Discord
+sudo snap install discord
+
+# Spotify
+sudo snap install spotify
