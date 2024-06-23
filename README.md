@@ -15,3 +15,7 @@ That's my dotfiles
 ## Post installation
 
 1. See [Neovim README](https://github.com/augusto-queirantes/dotfiles/blob/main/nvim/README.md) instructions
+
+## LSP
+
+To add a new lsp server just put the desired server name inside the `servers` array. This name should match a valid mason server.
