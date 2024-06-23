@@ -9,26 +9,21 @@ return {
 		"hrsh7th/cmp-nvim-lsp",
 	},
 	config = function()
+		local servers = { "typos_lsp", "elixirls", "lua_ls" }
 		require("mason").setup()
 
 		require("mason-lspconfig").setup({
-			ensure_installed = { "typos_lsp", "elixirls", "lua_ls" },
+			ensure_installed = servers,
 		})
 
 		require("lazydev").setup()
 
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-		require("lspconfig").typos_lsp.setup({
-			capabilities = capabilities,
-		})
-
-		require("lspconfig").elixirls.setup({
-			capabilities = capabilities,
-		})
-
-		require("lspconfig").lua_ls.setup({
-			capabilities = capabilities,
-		})
+		for _, server in pairs(servers) do
+			require("lspconfig")[server].setup({
+				capabilities = capabilities,
+			})
+		end
 	end,
 }
