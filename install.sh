@@ -10,9 +10,7 @@ sudo apt install -y curl zsh git ripgrep software-properties-common python3-dev 
 
 ## Neovim installation
 
-sudo add-apt-repository -y ppa:neovim-ppa/stable
-sudo apt update -y
-sudo apt install -y neovim
+sudo snap install --beta nvim --classic
 
 ## Oh my zsh installation
 
