@@ -12,25 +12,23 @@ return {
 		require("mason").setup()
 
 		require("mason-lspconfig").setup({
-			ensure_installed = vim.tbl_keys(require("lsp.servers")),
+			ensure_installed = { "typos_lsp", "elixirls", "lua_ls" },
 		})
 
 		require("lazydev").setup()
 
-		local capabilities = vim.lsp.protocol.make_client_capabilities()
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-		capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
+		require("lspconfig").typos_lsp.setup({
+			capabilities = capabilities,
+		})
 
-		local mason_lspconfig = require("mason-lspconfig")
+		require("lspconfig").elixirls.setup({
+			capabilities = capabilities,
+		})
 
-		mason_lspconfig.setup_handlers({
-			function(server_name)
-				require("lspconfig")[server_name].setup({
-					capabilities = capabilities,
-					settings = require("lsp.servers")[server_name],
-					filetypes = (require("lsp.servers")[server_name] or {}).filetypes,
-				})
-			end,
+		require("lspconfig").lua_ls.setup({
+			capabilities = capabilities,
 		})
 	end,
 }
