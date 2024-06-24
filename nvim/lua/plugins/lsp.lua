@@ -9,6 +9,7 @@ return {
 	},
 	config = function()
 		local servers = { "typos_lsp", "elixirls", "lua_ls" }
+
 		require("mason").setup()
 
 		require("mason-lspconfig").setup({
