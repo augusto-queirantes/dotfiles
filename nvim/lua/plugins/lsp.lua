@@ -30,6 +30,10 @@ return {
     require("lspconfig")["elixirls"].setup({
       capabilities = capabilities,
       cmd = { "/home/augusto/.elixirls/language_server.sh" },
+      on_init = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentFormattingRangeProvider = false
+      end
     })
   end,
 }
