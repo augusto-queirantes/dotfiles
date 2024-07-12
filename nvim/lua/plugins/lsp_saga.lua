@@ -12,6 +12,9 @@ return {
 			symbol_in_winbar = {
 				enable = false,
 			},
+			ui = {
+				code_action = "",
+			},
 		})
 
 		vim.keymap.set("n", "<leader>a", ":Lspsaga code_action<CR>")
