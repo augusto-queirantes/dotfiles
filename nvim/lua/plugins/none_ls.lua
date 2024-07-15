@@ -17,6 +17,8 @@ return {
 					"stylua",
 					"credo",
 					"mix",
+					"prettier",
+					"eslint",
 				},
 			})
 
@@ -29,9 +31,18 @@ return {
 				root_dir = null_ls_utils.root_pattern(".null-ls-root", "Makefile", ".git", "package.json"),
 
 				sources = {
+					-- Lua
 					formatting.stylua,
+
+					-- Elixir
 					formatting.mix,
 					diagnostics.credo,
+
+					-- js
+					formatting.prettier,
+					diagnostics.eslint,
+
+					-- Git
 					code_actions.gitsigns,
 				},
 
