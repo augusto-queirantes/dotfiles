@@ -7,21 +7,10 @@ zstyle ':omz:update' frequency 14
 
 HIST_STAMPS="dd/mm/yyyy"
 
-plugins=(git asdf)
+plugins=(git asdf aws zsh-syntax-highlighting colorize command-not-found compleat docker docker-compose mix)
 
 source $ZSH/oh-my-zsh.sh
 
-# Nvm
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-export NODE_PATH=`which node`
-
 # Aliases
 
-alias update="sudo apt upgrade -y && sudo apt update -y"
-
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+alias update="sudo pacman -Syyu"
