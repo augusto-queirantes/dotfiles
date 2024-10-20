@@ -13,13 +13,16 @@
       "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
       "ctrl-w": "pane::CloseActiveItem",
       "0": "vim::StartOfLineDownward",
-      "$": "vim::EndOfLineDownward"
+      "$": "vim::EndOfLineDownward",
+      "ctrl-n": "pane::RevealInProjectPanel"
     }
   },
   {
     "context": "Editor && vim_mode == insert",
     "bindings": {
-      "ctrl-a": "editor::SelectAll"
+      "ctrl-a": "editor::SelectAll",
+      "ctrl-shift-tab": "pane::ActivatePrevItem",
+      "ctrl-tab": "pane::ActivateNextItem"
     }
   },
   {
@@ -28,7 +31,9 @@
       "ctrl-a": "editor::SelectAll",
       "ctrl-v": "editor::Paste",
       "alt-j": "editor::MoveLineDown",
-      "alt-k": "editor::MoveLineUp"
+      "alt-k": "editor::MoveLineUp",
+      "tab": "vim::Indent",
+      "shift-tab": "vim::Outdent"
     }
   },
   {
