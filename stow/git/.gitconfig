@@ -1,4 +1,6 @@
 [user]
+	name = Augusto Queirantes
+	email = augusto.queirantes.dev@gmail.com
 	# name and email are intentionally empty — set per machine with:
 	#   git config --global user.name "..."
 	#   git config --global user.email "..."
