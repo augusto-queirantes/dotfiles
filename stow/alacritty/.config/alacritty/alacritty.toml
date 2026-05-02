@@ -1,31 +1,95 @@
+[general]
+# Reload config on file save without restarting Alacritty.
+live_config_reload = true
+# Inherit shell's cwd, don't override.
+working_directory = "None"
+
 [env]
+# Universal terminfo. tmux internally upgrades to tmux-256color and
+# uses `terminal-overrides ",xterm-256color:Tc"` for true color.
 TERM = "xterm-256color"
 
 [window]
-padding = { x = 10, y = 10 }
-decorations = "buttonless"
-opacity = 0.98
+padding = { x = 12, y = 12 }
+dynamic_padding = true
+decorations = "Buttonless"        # native macOS frame, no traffic-light buttons
+opacity = 1.0                      # full opacity — readability over aesthetics, esp. for Claude Code TUIs
+blur = false
+startup_mode = "Windowed"
+dynamic_title = true
+# Critical for tmux/Neovim/Claude Code on macOS: makes the Option key send
+# Alt so Meta-prefixed bindings work.
 option_as_alt = "Both"
-
-[font]
-size = 14.0
-normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+decorations_theme_variant = "Dark"
 
 [scrolling]
-history = 10000
+# tmux/Neovim manage their own scrollback, but having a buffer outside is useful
+# when running raw shells.
+history = 50000
+multiplier = 3
+
+[font]
+size = 25.0
+builtin_box_drawing = true        # crisp box-drawing/powerline glyphs (nvim, lazygit, btop)
+normal      = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold        = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic      = { family = "JetBrainsMono Nerd Font", style = "Italic" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Bold Italic" }
+
+[bell]
+duration = 0                       # silent — no flash on tmux/nvim bell
 
 [selection]
-save_to_clipboard = true
+save_to_clipboard = true           # selections sync to system clipboard
 
 [cursor]
-style = { shape = "Block", blinking = "On" }
+style = { shape = "Block", blinking = "Off" }
+vi_mode_style = { shape = "Block", blinking = "On" }
+unfocused_hollow = true
+thickness = 0.18
 
-# Tokyo Night Moon palette
+[terminal]
+# Lets remote/tmux/SSH sessions read AND write the system clipboard via OSC 52.
+# Claude Code uses this to copy from inside a tmux pane.
+osc52 = "CopyPaste"
+
+[mouse]
+hide_when_typing = true
+
+# Tokyo Night Moon — pairs with the Neovim colorscheme
 [colors.primary]
-background = "#222436"
+background        = "#222436"
+foreground        = "#c8d3f5"
+dim_foreground    = "#828bb8"
+bright_foreground = "#c8d3f5"
+
+[colors.cursor]
+text   = "CellBackground"
+cursor = "CellForeground"
+
+[colors.vi_mode_cursor]
+text   = "CellBackground"
+cursor = "#c099ff"
+
+[colors.search.matches]
+foreground = "#222436"
+background = "#ffc777"
+
+[colors.search.focused_match]
+foreground = "#222436"
+background = "#c3e88d"
+
+[colors.footer_bar]
 foreground = "#c8d3f5"
+background = "#1e2030"
+
+[colors.line_indicator]
+foreground = "None"
+background = "None"
+
+[colors.selection]
+text       = "CellForeground"
+background = "#2d3f76"
 
 [colors.normal]
 black   = "#1b1d2b"
@@ -46,3 +110,41 @@ blue    = "#9ab8ff"
 magenta = "#caabff"
 cyan    = "#b2ebff"
 white   = "#c8d3f5"
+
+[colors.dim]
+black   = "#1b1d2b"
+red     = "#ff757f"
+green   = "#c3e88d"
+yellow  = "#ffc777"
+blue    = "#82aaff"
+magenta = "#c099ff"
+cyan    = "#86e1fc"
+white   = "#828bb8"
+
+# Keyboard bindings: keep all Alacritty defaults and add a few macOS-friendly extras.
+# Defaults already cover: Cmd-C/V copy/paste, Cmd-+/- font size, Cmd-0 reset font,
+# Cmd-N new window, Cmd-Q quit, Cmd-W close, Cmd-F search.
+[[keyboard.bindings]]
+# Cmd-K: clear visible scrollback (mirrors iTerm/Terminal.app habit).
+key = "K"
+mods = "Command"
+chars = "\f"
+
+[[keyboard.bindings]]
+# Cmd-Enter: toggle fullscreen (handy when pairing/recording).
+key = "Return"
+mods = "Command"
+action = "ToggleFullscreen"
+
+[[keyboard.bindings]]
+# Shift-Enter: send a literal newline. Claude Code and many REPLs treat plain Enter
+# as "submit"; Shift-Enter inserts a newline for multi-line prompts.
+key = "Return"
+mods = "Shift"
+chars = "\u001B[13;2u"
+
+[[keyboard.bindings]]
+# Ctrl-Enter: alternate "newline" sequence some TUIs expect.
+key = "Return"
+mods = "Control"
+chars = "\u001B[13;5u"
