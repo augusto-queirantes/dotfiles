@@ -1,3 +1,9 @@
 .DS_Store
 *.swp
 *.swo
+
+# Claude Code per-machine settings
+.claude/
+
+# tmux plugins managed by TPM (cloned into the stowed tree at runtime)
+stow/tmux/.config/tmux/plugins/

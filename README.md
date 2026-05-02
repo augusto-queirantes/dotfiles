@@ -10,7 +10,7 @@ cd ~/Personal/dotfiles
 make setup
 ```
 
-Reopen the terminal afterwards. Inside `tmux`, press `prefix + I` (Ctrl-Space, then `I`) to install tmux plugins. Open `nvim` once — lazy.nvim auto-installs plugins.
+Reopen the terminal afterwards. Inside `tmux`, press `prefix + I` (Ctrl-a, then `I`) to install tmux plugins. Open `nvim` once — lazy.nvim auto-installs plugins.
 
 ## What `make setup` does
 
@@ -72,7 +72,7 @@ dotfiles/
 
 - **Shell:** zsh (bare) + starship prompt + zsh-autosuggestions + zsh-syntax-highlighting + fzf + zoxide
 - **Terminal:** Alacritty (Tokyo Night Moon)
-- **Multiplexer:** tmux + TPM (`tmux-sensible`, `resurrect`, `continuum`); `Ctrl-Space` prefix; `prefix + f` opens the sessionizer
+- **Multiplexer:** tmux + TPM (`tmux-sensible`, `resurrect`, `continuum`); `Ctrl-a` prefix; `prefix + f` opens the sessionizer
 - **Editor:** Neovim + lazy.nvim (telescope, treesitter, LSP via Mason, gitsigns, lualine, vim-tmux-navigator)
 - **Runtimes:** mise (configure in `stow/mise/.config/mise/config.toml`)
 - **CLI:** ripgrep, fd, bat, eza, delta, jq, yq, gh, lazygit, btop, tree
