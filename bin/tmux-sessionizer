@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Project search roots — edit to match your layout
+ROOTS=(
+  "$HOME/Personal"
+  "$HOME/Work"
+  "$HOME/dev"
+)
+
+if [[ $# -eq 1 ]]; then
+  selected=$1
+else
+  existing=()
+  for r in "${ROOTS[@]}"; do
+    [[ -d "$r" ]] && existing+=("$r")
+  done
+
+  git_repos=$(find "${existing[@]}" -maxdepth 3 -type d -name .git 2>/dev/null | sed 's|/.git$||' | sort -u || true)
+  flat_dirs=$(find "${existing[@]}" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | sort -u || true)
+
+  sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | sort || true)
+  current=$(tmux display-message -p "#{session_name}" 2>/dev/null || true)
+
+  dirs=$(printf '%s\n%s\n' "$git_repos" "$flat_dirs" | grep -v '^$' | sort -u)
+
+  options="Create new session..."
+  if [[ -n "$sessions" ]]; then
+    others=$(echo "$sessions" | grep -v "^${current}$" || true)
+    [[ -n "$others" ]] && options="${options}"$'\n'"${others}"
+    [[ -n "$current" ]] && options="${options}"$'\n'"${current}"
+  fi
+  options="${options}"$'\n'"${dirs}"
+
+  selected=$(printf '%s' "$options" | fzf \
+    --preview 'if [ -d {} ]; then ls -la {} | head -40; elif tmux has-session -t {} 2>/dev/null; then tmux capture-pane -ep -t {} | tail -40; else echo {}; fi' \
+    --preview-window=right:50%:wrap)
+fi
+
+[[ -z "$selected" ]] && exit 0
+
+if [[ "$selected" == "Create new session..." ]]; then
+  echo -n "Enter session name: "
+  read -r name
+  [[ -z "$name" ]] && exit 0
+  session_name=$(echo "$name" | tr ' .' '__')
+  selected=""
+elif tmux has-session -t="$selected" 2>/dev/null; then
+  session_name="$selected"
+  selected=""
+else
+  session_name=$(basename "$selected" | tr '.' '_')
+fi
+
+tmux_running=$(pgrep tmux || true)
+
+if [[ -z "${TMUX:-}" ]] && [[ -z "$tmux_running" ]]; then
+  if [[ -n "$selected" ]]; then
+    tmux new-session -s "$session_name" -c "$selected"
+  else
+    tmux new-session -s "$session_name"
+  fi
+  exit 0
+fi
+
+if ! tmux has-session -t="$session_name" 2>/dev/null; then
+  if [[ -n "$selected" ]]; then
+    tmux new-session -ds "$session_name" -c "$selected"
+  else
+    tmux new-session -ds "$session_name"
+  fi
+fi
+
+if [[ -n "${TMUX:-}" ]]; then
+  tmux switch-client -t "$session_name"
+else
+  tmux attach-session -t "$session_name"
+fi

@@ -1,0 +1,57 @@
+[user]
+	# name and email are intentionally empty — set per machine with:
+	#   git config --global user.name "..."
+	#   git config --global user.email "..."
+
+[init]
+	defaultBranch = main
+
+[core]
+	editor = nvim
+	pager = delta
+	excludesfile = ~/.gitignore_global
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	navigate = true
+	line-numbers = true
+	syntax-theme = Monokai Extended
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	algorithm = histogram
+	colorMoved = default
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+
+[push]
+	default = current
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[color]
+	ui = auto
+
+[alias]
+	co = checkout
+	cob = checkout -b
+	br = branch
+	st = status -sb
+	ci = commit
+	amend = commit --amend --no-edit
+	last = log -1 HEAD
+	ll = log --oneline --graph --decorate --all
+	unstage = reset HEAD --
+	bclean = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d"
+	fpush = push --force-with-lease
