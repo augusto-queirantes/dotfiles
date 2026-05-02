@@ -12,19 +12,20 @@ return {
         ensure_installed = { "lua_ls" },
       })
 
-      local on_attach = function(_, bufnr)
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-        end
-        map("gd", vim.lsp.buf.definition, "Goto definition")
-        map("gr", vim.lsp.buf.references, "References")
-        map("K", vim.lsp.buf.hover, "Hover")
-        map("<leader>rn", vim.lsp.buf.rename, "Rename")
-        map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-      end
+      vim.lsp.enable("lua_ls")
 
-      local lspconfig = require("lspconfig")
-      lspconfig.lua_ls.setup({ on_attach = on_attach })
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local map = function(keys, func, desc)
+            vim.keymap.set("n", keys, func, { buffer = args.buf, desc = desc })
+          end
+          map("gd", vim.lsp.buf.definition, "Goto definition")
+          map("gr", vim.lsp.buf.references, "References")
+          map("K", vim.lsp.buf.hover, "Hover")
+          map("<leader>rn", vim.lsp.buf.rename, "Rename")
+          map("<leader>ca", vim.lsp.buf.code_action, "Code action")
+        end,
+      })
     end,
   },
 }
