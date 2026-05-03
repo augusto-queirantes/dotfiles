@@ -203,6 +203,7 @@ Refresh interval: 5s.
 | `aggressive-resize` | `on` | A pane resizes only when the active client looks at it. |
 | `detach-on-destroy` | `off` | Closing the last window in a session jumps to another session instead of killing tmux. |
 | `default-terminal` | `tmux-256color` + `RGB` overrides | True color and italics. |
+| `extended-keys` | `always` + `extkeys` feature | Forward CSI-u key sequences (Shift-Enter, Ctrl-Enter, Shift-Tab, etc.) to inner apps. Required for Claude Code multi-line input and Neovim modern keymaps. |
 
 ---
 
@@ -225,3 +226,12 @@ hosting the SSH client) needs OSC 52 enabled. Alacritty does this with
 **Reload config without restarting:** `p r`.
 
 **Kill the server entirely:** `tmux kill-server`.
+
+**Shift-Enter / Ctrl-Enter doesn't reach Claude Code (or Neovim) inside tmux.**
+Need `set -s extended-keys always` and the `extkeys` terminal-feature for
+Alacritty (already in `tmux.conf`). Verify the outer terminal sends a CSI-u
+sequence: outside tmux, run `cat -v` and press Shift-Enter — you should see
+`^[[13;2u`. If you see only `^M`, fix the terminal first (Alacritty config has
+a `Shift+Return` binding sending `[13;2u`). After editing tmux.conf,
+**`tmux kill-server` and start fresh** — `extended-keys` is a server option,
+`prefix r` won't pick it up.
