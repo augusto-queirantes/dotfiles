@@ -4,11 +4,14 @@ map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save" })
 map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 map("n", "<Esc>", "<cmd>nohlsearch<cr>")
 
--- Window nav (works with tmux via vim-tmux-navigator-style bindings)
-map("n", "<C-h>", "<C-w>h")
-map("n", "<C-j>", "<C-w>j")
-map("n", "<C-k>", "<C-w>k")
-map("n", "<C-l>", "<C-w>l")
+-- Fast save / quit (muscle memory)
+map("n", "<C-s>", "<cmd>w<cr>", { desc = "Save" })
+map("n", "<C-q>", "<cmd>q<cr>", { desc = "Quit" })
+
+-- System clipboard copy / paste (alongside unnamedplus default)
+map("v", "<C-c>", '"+y',         { desc = "Copy to system clipboard" })
+map("i", "<C-v>", "<C-r><C-o>+", { desc = "Paste from system clipboard" })
+map({ "n", "v" }, "<C-v>", '"+p', { desc = "Paste from system clipboard" })
 
 -- Move lines
 map("v", "J", ":m '>+1<cr>gv=gv")
