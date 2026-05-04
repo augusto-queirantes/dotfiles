@@ -70,7 +70,7 @@ if ! tmux has-session -t="$session" 2>/dev/null; then
   # Window 1: claude. After claude exits, drop to a shell so the window
   # survives — closing the window kills the session if it's the last one.
   tmux new-session -ds "$session" -c "$worktree_path" -n claude \
-    "claude; exec ${SHELL:-/bin/zsh}"
+    "claude --dangerously-skip-permissions; exec ${SHELL:-/bin/zsh}"
   tmux new-window  -t "$session:" -c "$worktree_path" -n shell
   tmux select-window -t "$session:1"
 fi
