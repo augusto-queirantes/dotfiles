@@ -1,5 +1,5 @@
 DOTFILES := $(shell pwd)
-STOW_PACKAGES := zsh starship alacritty tmux nvim git mise aerospace
+STOW_PACKAGES := zsh starship alacritty tmux nvim git mise aerospace claude
 
 .PHONY: help setup brew backup stow unstow restow macos post bin clean
 

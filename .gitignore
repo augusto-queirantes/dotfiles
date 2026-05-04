@@ -2,8 +2,9 @@
 *.swp
 *.swo
 
-# Claude Code per-machine settings
-.claude/
+# Per-project Claude Code settings at the dotfiles repo root only.
+# The global config lives under stow/claude/.claude/ and IS tracked.
+/.claude/
 
 # tmux plugins managed by TPM (cloned into the stowed tree at runtime)
 stow/tmux/.config/tmux/plugins/
