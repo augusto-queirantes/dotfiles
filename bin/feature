@@ -1,0 +1,200 @@
+#!/usr/bin/env bash
+#
+# feature — start and tear down feature-development environments.
+#
+# Subcommands:
+#   feature add <description...>    Fetch origin/main, create a worktree on a
+#                                   new branch, spin up a tmux session with
+#                                   two windows (claude + shell), attach.
+#   feature remove [session] [-y]   Remove the worktree, delete the branch,
+#                                   kill the tmux session. Defaults to the
+#                                   current tmux session. -y skips the
+#                                   confirm prompt.
+#
+# Examples:
+#   feature add add rate limit middleware
+#   feature add "fix flaky webhook test"
+#   feature remove
+#   feature remove my-repo-add-rate-limit-middleware -y
+set -euo pipefail
+
+usage() {
+  sed -n '2,/^set -e/p' "$0" | sed -E 's/^# ?//; /^set -e/d'
+  exit "${1:-0}"
+}
+
+# ---------- feature add ----------
+
+feature_add() {
+  if [[ $# -eq 0 ]]; then
+    echo "usage: feature add <description>" >&2
+    exit 2
+  fi
+
+  local desc="$*"
+
+  local git_root
+  git_root=$(git rev-parse --show-toplevel 2>/dev/null) || {
+    echo "feature add: not inside a git repository" >&2
+    exit 1
+  }
+  local repo_name repo_parent
+  repo_name=$(basename "$git_root")
+  repo_parent=$(dirname "$git_root")
+
+  local slug
+  slug=$(printf '%s' "$desc" \
+    | tr '[:upper:]' '[:lower:]' \
+    | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g' \
+    | cut -c1-40 \
+    | sed -E 's/-+$//')
+  [[ -z "$slug" ]] && { echo "feature add: empty slug from: $desc" >&2; exit 1; }
+
+  local prefix
+  prefix=$(git config --get user.name 2>/dev/null | awk '{print tolower($1)}')
+  [[ -z "$prefix" ]] && prefix="$USER"
+
+  local branch="$prefix/$slug"
+  local worktree_path="$repo_parent/$repo_name-$slug"
+
+  local n=2
+  while git -C "$git_root" show-ref --verify --quiet "refs/heads/$branch" \
+     || git -C "$git_root" show-ref --verify --quiet "refs/remotes/origin/$branch" \
+     || [[ -e "$worktree_path" ]]; do
+    branch="$prefix/$slug-$n"
+    worktree_path="$repo_parent/$repo_name-$slug-$n"
+    n=$((n+1))
+  done
+
+  echo "→ fetching origin/main"
+  git -C "$git_root" fetch origin main
+
+  echo "→ worktree $worktree_path on $branch"
+  git -C "$git_root" worktree add "$worktree_path" -b "$branch" origin/main
+
+  local session
+  session=$(printf '%s' "$repo_name-$slug" | tr '.:' '__')
+
+  if ! tmux has-session -t="$session" 2>/dev/null; then
+    echo "→ tmux session $session"
+    tmux new-session -ds "$session" -c "$worktree_path" -n claude \
+      "claude --dangerously-skip-permissions; exec ${SHELL:-/bin/zsh}"
+    tmux new-window  -t "$session:" -c "$worktree_path" -n shell
+    tmux select-window -t "$session:1"
+
+    tmux set-option -t "$session" -q @feature_worktree  "$worktree_path"
+    tmux set-option -t "$session" -q @feature_branch    "$branch"
+    tmux set-option -t "$session" -q @feature_repo_root "$git_root"
+  fi
+
+  if [[ -n "${TMUX:-}" ]]; then
+    tmux switch-client -t "$session"
+  else
+    tmux attach-session -t "$session"
+  fi
+}
+
+# ---------- feature remove ----------
+
+feature_remove() {
+  local assume_yes=0
+  local session=""
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      -y) assume_yes=1; shift ;;
+      -*) echo "feature remove: unknown flag: $1" >&2; exit 2 ;;
+      *)  session="$1"; shift ;;
+    esac
+  done
+
+  if [[ -z "$session" ]]; then
+    session=$(tmux display-message -p '#S' 2>/dev/null || true)
+    if [[ -z "$session" ]]; then
+      echo "feature remove: not inside tmux; pass a session name" >&2
+      exit 2
+    fi
+  fi
+
+  if ! tmux has-session -t="$session" 2>/dev/null; then
+    echo "feature remove: no tmux session named '$session'" >&2
+    exit 1
+  fi
+
+  local worktree branch repo_root
+  worktree=$(tmux  show-options -t "$session" -v @feature_worktree  2>/dev/null || true)
+  branch=$(tmux    show-options -t "$session" -v @feature_branch    2>/dev/null || true)
+  repo_root=$(tmux show-options -t "$session" -v @feature_repo_root 2>/dev/null || true)
+
+  if [[ -z "$worktree" || -z "$repo_root" ]]; then
+    echo "feature remove: session '$session' was not created by 'feature add'" >&2
+    echo "  (no @feature_worktree / @feature_repo_root options set)" >&2
+    echo "  kill it manually: tmux kill-session -t '$session'" >&2
+    exit 1
+  fi
+
+  local dirty="" unmerged=""
+
+  if [[ -d "$worktree" ]]; then
+    if [[ -n "$(git -C "$worktree" status --porcelain 2>/dev/null)" ]]; then
+      dirty="yes"
+    fi
+  fi
+
+  if [[ -n "$branch" ]] \
+     && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+    if [[ -n "$(git -C "$repo_root" log "origin/main..$branch" --oneline 2>/dev/null)" ]]; then
+      unmerged="yes"
+    fi
+  fi
+
+  echo "About to destroy:"
+  echo "  worktree: $worktree"
+  [[ -n "$branch"  ]] && echo "  branch:   $branch"
+  echo "  session:  $session"
+  [[ -n "$dirty"    ]] && echo "  ! worktree has uncommitted changes"
+  [[ -n "$unmerged" ]] && echo "  ! branch has commits not in origin/main"
+
+  if [[ $assume_yes -ne 1 ]] && { [[ -n "$dirty" ]] || [[ -n "$unmerged" ]]; }; then
+    read -r -p "Continue and discard? [y/N] " ans
+    case "$ans" in
+      y|Y|yes|YES) ;;
+      *) echo "aborted"; exit 1 ;;
+    esac
+  fi
+
+  cd "$repo_root"
+
+  if [[ -d "$worktree" ]]; then
+    echo "→ removing worktree $worktree"
+    if [[ -n "$dirty" ]]; then
+      git -C "$repo_root" worktree remove --force "$worktree"
+    else
+      git -C "$repo_root" worktree remove "$worktree"
+    fi
+  fi
+
+  if [[ -n "$branch" ]] \
+     && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+    echo "→ deleting branch $branch"
+    if [[ -n "$unmerged" ]]; then
+      git -C "$repo_root" branch -D "$branch"
+    else
+      git -C "$repo_root" branch -d "$branch"
+    fi
+  fi
+
+  echo "→ killing tmux session $session"
+  tmux kill-session -t "$session"
+}
+
+# ---------- dispatch ----------
+
+cmd="${1:-}"
+[[ $# -gt 0 ]] && shift
+
+case "$cmd" in
+  add)               feature_add    "$@" ;;
+  remove|rm|end)     feature_remove "$@" ;;
+  -h|--help|help|"") usage 0 ;;
+  *) echo "feature: unknown subcommand: $cmd" >&2; usage 2 ;;
+esac
