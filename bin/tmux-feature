@@ -73,6 +73,11 @@ if ! tmux has-session -t="$session" 2>/dev/null; then
     "claude --dangerously-skip-permissions; exec ${SHELL:-/bin/zsh}"
   tmux new-window  -t "$session:" -c "$worktree_path" -n shell
   tmux select-window -t "$session:1"
+
+  # Stash metadata on the session so tmux-feature-end can clean up later.
+  tmux set-option -t "$session" -q @feature_worktree  "$worktree_path"
+  tmux set-option -t "$session" -q @feature_branch    "$branch"
+  tmux set-option -t "$session" -q @feature_repo_root "$git_root"
 fi
 
 if [[ -n "${TMUX:-}" ]]; then

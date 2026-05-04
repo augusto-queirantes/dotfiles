@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+#
+# tmux-feature-end — clean up a feature created by tmux-feature.
+#
+#   1. removes the git worktree
+#   2. deletes the local branch (if merged, or with confirmation)
+#   3. kills the tmux session
+#
+# Usage:
+#   tmux-feature-end                 # clean up the current tmux session
+#   tmux-feature-end <session-name>  # clean up a specific session
+#   tmux-feature-end -y [...]        # skip the confirmation prompt
+#
+# Reads session-scoped tmux options set by tmux-feature:
+#   @feature_worktree, @feature_branch, @feature_repo_root.
+# If those are missing the session was not created by tmux-feature and
+# this command refuses to act — kill it manually with `tmux kill-session`.
+set -euo pipefail
+
+assume_yes=0
+if [[ "${1:-}" == "-y" ]]; then
+  assume_yes=1
+  shift
+fi
+
+# Resolve the target session.
+if [[ $# -ge 1 ]]; then
+  session="$1"
+else
+  session=$(tmux display-message -p '#S' 2>/dev/null || true)
+  if [[ -z "$session" ]]; then
+    echo "tmux-feature-end: not inside tmux; pass a session name" >&2
+    exit 2
+  fi
+fi
+
+if ! tmux has-session -t="$session" 2>/dev/null; then
+  echo "tmux-feature-end: no tmux session named '$session'" >&2
+  exit 1
+fi
+
+# Read the metadata stashed by tmux-feature.
+worktree=$(tmux  show-options -t "$session" -v @feature_worktree  2>/dev/null || true)
+branch=$(tmux    show-options -t "$session" -v @feature_branch    2>/dev/null || true)
+repo_root=$(tmux show-options -t "$session" -v @feature_repo_root 2>/dev/null || true)
+
+if [[ -z "$worktree" || -z "$repo_root" ]]; then
+  echo "tmux-feature-end: session '$session' was not created by tmux-feature" >&2
+  echo "  (no @feature_worktree / @feature_repo_root options set)" >&2
+  echo "  kill it manually: tmux kill-session -t '$session'" >&2
+  exit 1
+fi
+
+# Safety checks.
+dirty=""
+unmerged=""
+
+if [[ -d "$worktree" ]]; then
+  if [[ -n "$(git -C "$worktree" status --porcelain 2>/dev/null)" ]]; then
+    dirty="yes"
+  fi
+fi
+
+if [[ -n "$branch" ]] \
+   && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+  # Any commits on the branch not yet in origin/main?
+  if [[ -n "$(git -C "$repo_root" log "origin/main..$branch" --oneline 2>/dev/null)" ]]; then
+    unmerged="yes"
+  fi
+fi
+
+echo "About to destroy:"
+echo "  worktree: $worktree"
+[[ -n "$branch"  ]] && echo "  branch:   $branch"
+echo "  session:  $session"
+[[ -n "$dirty"    ]] && echo "  ! worktree has uncommitted changes"
+[[ -n "$unmerged" ]] && echo "  ! branch has commits not in origin/main"
+
+if [[ $assume_yes -ne 1 ]] && { [[ -n "$dirty" ]] || [[ -n "$unmerged" ]]; }; then
+  read -r -p "Continue and discard? [y/N] " ans
+  case "$ans" in
+    y|Y|yes|YES) ;;
+    *) echo "aborted"; exit 1 ;;
+  esac
+fi
+
+# Cleanup. cd to the main checkout in case we're standing inside the
+# worktree we are about to remove.
+cd "$repo_root"
+
+if [[ -d "$worktree" ]]; then
+  echo "→ removing worktree $worktree"
+  if [[ -n "$dirty" ]]; then
+    git -C "$repo_root" worktree remove --force "$worktree"
+  else
+    git -C "$repo_root" worktree remove "$worktree"
+  fi
+fi
+
+if [[ -n "$branch" ]] \
+   && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+  echo "→ deleting branch $branch"
+  if [[ -n "$unmerged" ]]; then
+    git -C "$repo_root" branch -D "$branch"
+  else
+    git -C "$repo_root" branch -d "$branch"
+  fi
+fi
+
+echo "→ killing tmux session $session"
+# This may detach us if we're attached to the session being killed —
+# nothing else to do after this, so that's fine.
+tmux kill-session -t "$session"
