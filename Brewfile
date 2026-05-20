@@ -34,6 +34,7 @@ brew "btop"
 brew "git"
 brew "gh"
 brew "lazygit"
+brew "lefthook"
 
 # GUI apps
 cask "alacritty"
