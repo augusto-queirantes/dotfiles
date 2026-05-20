@@ -44,6 +44,11 @@ command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 # mise
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 
+# Default claude with the conclave plugin loaded.
+claude() {
+  command claude --plugin-dir "$HOME/Personal/conclave-claude-improvements" "$@"
+}
+
 # Aliases
 alias ls="eza --group-directories-first"
 alias ll="eza -l --group-directories-first --git"
@@ -58,3 +63,6 @@ alias ts="tmux-sessionizer"
 
 # Starship prompt
 command -v starship >/dev/null && eval "$(starship init zsh)"
+
+# bun completions
+[ -s "/Users/augustoqueirantes/.bun/_bun" ] && source "/Users/augustoqueirantes/.bun/_bun"
