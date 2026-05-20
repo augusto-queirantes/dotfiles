@@ -10,6 +10,7 @@
 set -u
 
 [[ "$(uname -s)" == "Darwin" ]] || exit 0
+command -v terminal-notifier >/dev/null 2>&1 || exit 0
 
 mode="${1:-stop}"
 
@@ -20,13 +21,20 @@ esac
 
 case "$mode" in
   permission)
-    body="Decision needed"
-    sound_clause=' sound name "Glass"'
+    message="Decision needed"
+    sound="Glass"
     ;;
   *)
-    body="Done — your turn"
-    sound_clause=''
+    message="Done — your turn"
+    sound=""
     ;;
 esac
 
-osascript -e "display notification \"$body\" with title \"Claude Code\"$sound_clause" >/dev/null 2>&1 || true
+args=(
+  -title "Claude Code"
+  -message "$message"
+  -group "claude-code-$mode"
+)
+[[ -n "$sound" ]] && args+=(-sound "$sound")
+
+terminal-notifier "${args[@]}" >/dev/null 2>&1 || true

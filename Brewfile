@@ -16,6 +16,9 @@ brew "zoxide"
 brew "tmux"
 brew "neovim"
 
+# macOS notifications (used by ~/.claude/hooks/notify.sh)
+brew "terminal-notifier"
+
 # Modern CLI replacements
 brew "ripgrep"
 brew "fd"
