@@ -24,24 +24,39 @@ return {
   },
 
   {
-    "stevearc/oil.nvim",
-    lazy = false,
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
+    cmd = "Neotree",
     keys = {
-      { "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
-      { "<leader>e", "<cmd>Oil<cr>", desc = "File explorer (oil)" },
+      { "<leader>e", "<cmd>Neotree toggle<cr>",       desc = "Toggle file tree" },
+      { "<leader>E", "<cmd>Neotree focus<cr>",        desc = "Focus file tree" },
+      { "<leader>r", "<cmd>Neotree reveal<cr>",       desc = "Reveal current file in tree" },
     },
     opts = {
-      default_file_explorer = true,
-      delete_to_trash = true,
-      skip_confirm_for_simple_edits = true,
-      view_options = {
-        show_hidden = true,
+      close_if_last_window = true,
+      filesystem = {
+        follow_current_file = { enabled = true },
+        use_libuv_file_watcher = true,
+        filtered_items = {
+          visible = false,
+          hide_dotfiles = false,
+          hide_gitignored = true,
+        },
       },
-      keymaps = {
-        ["q"] = "actions.close",
-        ["<C-h>"] = false,
-        ["<C-l>"] = false,
+      window = {
+        position = "left",
+        width = 32,
+        mappings = {
+          ["q"] = "close_window",
+        },
+      },
+      default_component_configs = {
+        indent = { with_markers = true, with_expanders = true },
+        git_status = { symbols = { unstaged = "M", staged = "S" } },
       },
     },
   },
@@ -59,7 +74,7 @@ return {
   },
 
   {
-    "echasnovski/mini.ai",
+    "nvim-mini/mini.ai",
     event = "VeryLazy",
     config = function()
       local ai = require("mini.ai")
