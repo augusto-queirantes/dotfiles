@@ -6,16 +6,15 @@
 #   feature add <description...>    Fetch origin/main, create a worktree on a
 #                                   new branch, spin up a tmux session with
 #                                   two windows (claude + shell), attach.
-#   feature remove [session] [-y]   Remove the worktree, delete the branch,
+#   feature remove [session]        Remove the worktree, delete the branch,
 #                                   kill the tmux session. Defaults to the
-#                                   current tmux session. -y skips the
-#                                   confirm prompt.
+#                                   current tmux session. No prompt.
 #
 # Examples:
 #   feature add add rate limit middleware
 #   feature add "fix flaky webhook test"
 #   feature remove
-#   feature remove my-repo-add-rate-limit-middleware -y
+#   feature remove my-repo-add-rate-limit-middleware
 set -euo pipefail
 
 usage() {
@@ -50,18 +49,14 @@ feature_add() {
     | sed -E 's/-+$//')
   [[ -z "$slug" ]] && { echo "feature add: empty slug from: $desc" >&2; exit 1; }
 
-  local prefix
-  prefix=$(git config --get user.name 2>/dev/null | awk '{print tolower($1)}')
-  [[ -z "$prefix" ]] && prefix="$USER"
-
-  local branch="$prefix/$slug"
+  local branch="$slug"
   local worktree_path="$repo_parent/$repo_name-$slug"
 
   local n=2
   while git -C "$git_root" show-ref --verify --quiet "refs/heads/$branch" \
      || git -C "$git_root" show-ref --verify --quiet "refs/remotes/origin/$branch" \
      || [[ -e "$worktree_path" ]]; do
-    branch="$prefix/$slug-$n"
+    branch="$slug-$n"
     worktree_path="$repo_parent/$repo_name-$slug-$n"
     n=$((n+1))
   done
@@ -97,11 +92,9 @@ feature_add() {
 # ---------- feature remove ----------
 
 feature_remove() {
-  local assume_yes=0
   local session=""
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -y) assume_yes=1; shift ;;
       -*) echo "feature remove: unknown flag: $1" >&2; exit 2 ;;
       *)  session="$1"; shift ;;
     esac
@@ -153,14 +146,6 @@ feature_remove() {
   echo "  session:  $session"
   [[ -n "$dirty"    ]] && echo "  ! worktree has uncommitted changes"
   [[ -n "$unmerged" ]] && echo "  ! branch has commits not in origin/main"
-
-  if [[ $assume_yes -ne 1 ]] && { [[ -n "$dirty" ]] || [[ -n "$unmerged" ]]; }; then
-    read -r -p "Continue and discard? [y/N] " ans
-    case "$ans" in
-      y|Y|yes|YES) ;;
-      *) echo "aborted"; exit 1 ;;
-    esac
-  fi
 
   cd "$repo_root"
 
