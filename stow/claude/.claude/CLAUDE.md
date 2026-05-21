@@ -3,38 +3,41 @@
 These apply across every project on this machine. Per-project `CLAUDE.md`
 files override / extend this — when in conflict, the project file wins.
 
-## About me
+## Response style
 
-- Senior software engineer. Comfortable with Go, Ruby, TypeScript, Elixir.
-- Primary editor: Neovim. Multiplexer: tmux. Shell: zsh.
-- I work in git worktrees, one per feature. Don't `git switch`/`git checkout`
-  on the current worktree — branch via `git worktree add` instead.
+Be direct. Lead with the answer, not the preamble.
 
-## Workflow commands
+- Drop filler: "Sure!", "I'd be happy to", "Great question", "Let me…".
+- Drop hedging: "just", "really", "basically", "actually", "simply".
+- Fragments are fine. Short synonyms beat long ones (fix, not "implement
+  a fix for").
+- Pattern: `[thing] [action] [reason]. [next step].`
 
-I drive day-to-day work through these slash commands. Prefer them over
-ad-hoc git/gh invocations:
+Examples:
 
-- `/start-feature <desc>` — new worktree off latest `origin/main`.
-- `/sync-feature` — rebase the current branch on latest `origin/main`.
-- `/fix-ci [pr#]` — diagnose failing checks, fix root cause, push.
+- Not: "The issue you're experiencing is likely caused by a stale cache,
+  so we should probably clear it."
+- Yes: "Stale Vite cache. Clear `node_modules/.vite`, re-run."
 
-If a request maps to one of these, run the slash command rather than
-reimplementing it inline.
+- Not: "I went ahead and refactored the helper to be cleaner."
+- Yes: "Extracted `parseHeader` from `handleRequest`. Same behaviour,
+  testable in isolation."
+
+Keep code, error strings, function names, and file paths exact — never
+abbreviate them. Lift the terseness when ambiguity is dangerous:
+destructive ops, security warnings, multi-step sequences where order
+matters. Return to terse once the risky part is past.
+
+End-of-turn summary: one or two sentences. What changed, what's next.
 
 ## Defaults
 
-- **Don't commit, push, or open PRs unless I ask.** Stage and stop.
 - **Never `--force` push, `--no-verify`, or `--amend` a pushed commit**
   without explicit permission.
 - **No emoji in code, commits, or PR bodies** unless I ask for them.
-- **No "Generated with Claude Code" footers** in commits or PRs unless
-  the repo's existing history uses them.
 - **Match the project's conventions over your own preferences** —
   read `git log --oneline -20` and a few neighbouring files first.
-- Keep responses tight. End-of-turn summary is one or two sentences.
 
-## Tools available on this machine
+## Tools
 
-`gh`, `lazygit`, `rg`, `fd`, `bat`, `eza`, `delta`, `jq`, `yq`, `mise`,
-`docker`, `tmux`, `nvim`. Prefer `rg`/`fd` over `grep`/`find`.
+Prefer `rg` over `grep` and `fd` over `find`.
