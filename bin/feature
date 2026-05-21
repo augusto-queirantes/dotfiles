@@ -4,8 +4,9 @@
 #
 # Subcommands:
 #   feature add <description...>    Fetch origin/main, create a worktree on a
-#                                   new branch, spin up a tmux session with
-#                                   two windows (claude + shell), attach.
+#                                   new branch, copy the repo-root .env into
+#                                   it (if present), spin up a tmux session
+#                                   with two windows (claude + shell), attach.
 #   feature remove [session]        Remove the worktree, delete the branch,
 #                                   kill the tmux session. Defaults to the
 #                                   current tmux session. No prompt.
@@ -66,6 +67,11 @@ feature_add() {
 
   echo "→ worktree $worktree_path on $branch"
   git -C "$git_root" worktree add "$worktree_path" -b "$branch" origin/main
+
+  if [[ -f "$git_root/.env" ]]; then
+    echo "→ copying .env"
+    cp -p "$git_root/.env" "$worktree_path/.env"
+  fi
 
   local session
   session=$(printf '%s' "$repo_name-$slug" | tr '.:' '__')
