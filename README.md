@@ -65,7 +65,7 @@ dotfiles/
 │   ├── git/.gitconfig + .gitignore_global
 │   ├── mise/.config/mise/config.toml
 │   ├── aerospace/.config/aerospace/aerospace.toml
-│   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, commands/, agents/
+│   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, hooks/
 └── bin/                  # personal scripts → ~/.local/bin
     └── tmux-sessionizer
 ```
@@ -80,31 +80,23 @@ dotfiles/
 - **CLI:** ripgrep, fd, bat, eza, delta, jq, yq, gh, lazygit, btop, tree
 - **Window manager:** AeroSpace (alt+hjkl focus, alt+1..9 workspaces)
 - **Other:** Raycast, JetBrainsMono Nerd Font
-- **AI assistant:** Claude Code with global `CLAUDE.md`, workflow slash commands (`/start-feature`, `/sync-feature`, `/commit`, `/open-pr`, `/fix-ci`), and supporting subagents (`ci-investigator`, `code-reviewer`).
+- **AI assistant:** Claude Code with global `CLAUDE.md`, terminal-notifier hooks, and language server plugins (Ruby, TypeScript/JS, Go).
 
-## Claude Code workflow
+## Claude Code setup
 
-Reproducible across machines via the `claude` stow package. The whole flow:
-
-```
-/start-feature add rate limit middleware   # new worktree off origin/main
-# ... do the work ...
-/commit                                    # generates a meaningful message
-/open-pr                                   # pushes, opens PR, real description
-/fix-ci                                    # if checks fail, diagnoses + fixes
-/sync-feature                              # rebase on origin/main when stale
-```
-
-Files live under `stow/claude/.claude/`:
+The `claude` stow package symlinks settings into `~/.claude/`:
 
 | Path | What it is |
 |------|-----------|
-| `settings.json` | Global Claude Code settings (model, permissions, theme, hooks) |
+| `settings.json` | Global settings — model, permissions, theme, hooks, enabled LSP plugins |
 | `CLAUDE.md` | Personal instructions injected into every session |
-| `commands/*.md` | Slash commands (`/start-feature` etc.) |
-| `agents/*.md` | Subagents callable via the `Agent` tool |
+| `hooks/notify.sh` | terminal-notifier wrapper for Stop and PermissionRequest events |
 
 Per-machine overrides go in `~/.claude/settings.local.json` (untracked).
+
+Feature workflow is driven by `bin/feature` rather than slash commands:
+`feature add <desc>` creates a worktree + tmux session and attaches;
+`feature remove` tears it down.
 
 ## Personal config
 

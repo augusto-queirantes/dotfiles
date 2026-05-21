@@ -73,7 +73,7 @@ feature_add() {
   if ! tmux has-session -t="$session" 2>/dev/null; then
     echo "→ tmux session $session"
     tmux new-session -ds "$session" -c "$worktree_path" -n claude \
-      "claude --dangerously-skip-permissions; exec ${SHELL:-/bin/zsh}"
+      "claude --plugin-dir ~/Personal/conclave; exec ${SHELL:-/bin/zsh}"
     tmux new-window  -t "$session:" -c "$worktree_path" -n shell
     tmux select-window -t "$session:1"
 
