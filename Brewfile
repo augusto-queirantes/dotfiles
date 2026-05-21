@@ -36,6 +36,11 @@ brew "gh"
 brew "lazygit"
 brew "lefthook"
 
+# Language servers (used by Claude Code LSP plugins)
+brew "gopls"
+brew "typescript-language-server"
+brew "ruby-lsp"
+
 # GUI apps
 cask "alacritty"
 cask "raycast"
