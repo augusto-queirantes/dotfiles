@@ -64,7 +64,6 @@ dotfiles/
 │   ├── nvim/.config/nvim/...
 │   ├── git/.gitconfig + .gitignore_global
 │   ├── mise/.config/mise/config.toml
-│   ├── aerospace/.config/aerospace/aerospace.toml
 │   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, hooks/
 └── bin/                  # personal scripts → ~/.local/bin
     └── tmux-sessionizer
@@ -78,7 +77,6 @@ dotfiles/
 - **Editor:** Neovim 0.11+ + lazy.nvim — blink.cmp completion, conform.nvim format-on-save, nvim-lint, telescope (+ fzf-native, ui-select), treesitter, LSP via Mason (Ruby, TypeScript, Go, Elixir, Lua), oil.nvim, flash.nvim, nvim-surround, mini.ai, trouble.nvim, gitsigns, lualine, vim-tmux-navigator. See [`docs/nvim.md`](docs/nvim.md).
 - **Runtimes:** mise (configure in `stow/mise/.config/mise/config.toml`)
 - **CLI:** ripgrep, fd, bat, eza, delta, jq, yq, gh, lazygit, btop, tree
-- **Window manager:** AeroSpace (alt+hjkl focus, alt+1..9 workspaces)
 - **Other:** Raycast, JetBrainsMono Nerd Font
 - **AI assistant:** Claude Code with global `CLAUDE.md`, terminal-notifier hooks, and language server plugins (Ruby, TypeScript/JS, Go).
 

@@ -1,6 +1,3 @@
-# Taps
-tap "nikitabobko/tap"  # AeroSpace
-
 # Core
 brew "stow"
 brew "mise"
@@ -44,7 +41,6 @@ brew "ruby-lsp"
 # GUI apps
 cask "alacritty"
 cask "raycast"
-cask "nikitabobko/tap/aerospace"
 
 # Font
 cask "font-jetbrains-mono-nerd-font"
