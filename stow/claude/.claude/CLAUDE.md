@@ -17,8 +17,6 @@ ad-hoc git/gh invocations:
 
 - `/start-feature <desc>` — new worktree off latest `origin/main`.
 - `/sync-feature` — rebase the current branch on latest `origin/main`.
-- `/commit [hint]` — stage, verify, write a meaningful message, commit.
-- `/open-pr [hint]` — push and open a PR with a real description.
 - `/fix-ci [pr#]` — diagnose failing checks, fix root cause, push.
 
 If a request maps to one of these, run the slash command rather than
