@@ -2,6 +2,7 @@
 brew "stow"
 brew "mise"
 brew "starship"
+brew "uv"               # Python runner; installs semble and runs its MCP via uvx
 
 # Shell extras
 brew "zsh-autosuggestions"
@@ -12,9 +13,6 @@ brew "zoxide"
 # Multiplexer & editor
 brew "tmux"
 brew "neovim"
-
-# macOS notifications (used by ~/.claude/hooks/notify.sh)
-brew "terminal-notifier"
 
 # Modern CLI replacements
 brew "ripgrep"

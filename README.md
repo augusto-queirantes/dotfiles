@@ -64,7 +64,7 @@ dotfiles/
 │   ├── nvim/.config/nvim/...
 │   ├── git/.gitconfig + .gitignore_global
 │   ├── mise/.config/mise/config.toml
-│   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, hooks/
+│   └── claude/.claude/    # Claude Code: settings + CLAUDE.md
 └── bin/                  # personal scripts → ~/.local/bin
     └── tmux-sessionizer
 ```
@@ -77,8 +77,9 @@ dotfiles/
 - **Editor:** Neovim 0.11+ + lazy.nvim — blink.cmp completion, conform.nvim format-on-save, nvim-lint, telescope (+ fzf-native, ui-select), treesitter, LSP via Mason (Ruby, TypeScript, Go, Elixir, Lua), oil.nvim, flash.nvim, nvim-surround, mini.ai, trouble.nvim, gitsigns, lualine, vim-tmux-navigator. See [`docs/nvim.md`](docs/nvim.md).
 - **Runtimes:** mise (configure in `stow/mise/.config/mise/config.toml`)
 - **CLI:** ripgrep, fd, bat, eza, delta, jq, yq, gh, lazygit, btop, tree
+- **Code search for agents:** [semble](https://github.com/MinishLab/semble) — installed via `uv tool install semble`, registered as a global Claude Code MCP server, and documented in the global `CLAUDE.md` so every session prefers it over `grep`+`Read` for semantic lookups.
 - **Other:** Raycast, JetBrainsMono Nerd Font
-- **AI assistant:** Claude Code with global `CLAUDE.md`, terminal-notifier hooks, and language server plugins (Ruby, TypeScript/JS, Go).
+- **AI assistant:** Claude Code with global `CLAUDE.md` and language server plugins (Ruby, TypeScript/JS, Go).
 
 ## Claude Code setup
 
@@ -86,11 +87,12 @@ The `claude` stow package symlinks settings into `~/.claude/`:
 
 | Path | What it is |
 |------|-----------|
-| `settings.json` | Global settings — model, permissions, theme, hooks, enabled LSP plugins |
+| `settings.json` | Global settings — model, permissions, theme, enabled LSP plugins |
 | `CLAUDE.md` | Personal instructions injected into every session |
-| `hooks/notify.sh` | terminal-notifier wrapper for Stop and PermissionRequest events |
 
 Per-machine overrides go in `~/.claude/settings.local.json` (untracked).
+
+`install/post.sh` also runs `uv tool install semble` and `claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files` (both idempotent), so the [semble](https://github.com/MinishLab/semble) CLI and its MCP server are available to every Claude Code session. The `--include-text-files` flag lets the same MCP call cover source, markdown, yaml, and json — one tool, all content types.
 
 Feature workflow is driven by `bin/feature` rather than slash commands:
 `feature add <desc>` creates a worktree + tmux session and attaches;

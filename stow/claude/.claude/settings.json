@@ -1,43 +1,22 @@
 {
   "permissions": {
     "allow": [
-      "mcp__pencil",
       "WebSearch",
       "WebFetch",
+      "Bash(semble *)",
       "Bash(rg *)",
       "Bash(fd *)",
       "Bash(bat *)",
       "Bash(jq *)",
       "Bash(curl -sL *)",
       "Bash(curl -fsSL *)",
-      "Bash(gh api GET *)"
+      "Bash(gh api GET *)",
+      "mcp__semble__search",
+      "mcp__semble__find_related"
     ],
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$HOME/.claude/hooks/notify.sh\" stop"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$HOME/.claude/hooks/notify.sh\" permission"
-          }
-        ]
-      }
-    ]
-  },
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,

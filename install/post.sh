@@ -17,6 +17,23 @@ if command -v mise >/dev/null 2>&1; then
   mise install || echo "mise install failed — check ~/.config/mise/config.toml"
 fi
 
+# semble: install the CLI globally and register its MCP server with Claude Code.
+if command -v uv >/dev/null 2>&1; then
+  if ! command -v semble >/dev/null 2>&1; then
+    echo "Installing semble..."
+    uv tool install semble || echo "semble install failed — re-run after fixing uv."
+  fi
+  if command -v claude >/dev/null 2>&1; then
+    if ! claude mcp list 2>/dev/null | grep -q '^semble:'; then
+      echo "Registering semble MCP server with Claude Code..."
+      # --include-text-files extends indexing to .md/.yaml/.json so docs + config
+      # are searchable through the same MCP call as source code.
+      claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files \
+        || echo "claude mcp add semble failed — register it manually."
+    fi
+  fi
+fi
+
 # fzf shell integrations are loaded from .zshrc; nothing extra to install.
 
 # Set zsh as default shell if it isn't
