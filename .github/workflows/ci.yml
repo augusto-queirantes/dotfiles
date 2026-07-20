@@ -4,14 +4,17 @@ on:
   push:
     branches: [main]
   pull_request:
-  schedule:
-    - cron: "0 9 * * 1" # weekly full-install smoke, Monday 09:00 UTC
+  # Full install is on-demand: run it from the Actions tab before setting up
+  # a new machine. External drift (brew formula renames, macOS updates) is
+  # only caught when this runs, but that risk window only matters right
+  # before a fresh install anyway.
+  workflow_dispatch:
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: install shellcheck + shfmt
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck shfmt
       - name: shellcheck
@@ -22,7 +25,7 @@ jobs:
   stow-smoke:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: install stow
         run: brew install stow
       - name: stow + bin into runner HOME
@@ -34,13 +37,11 @@ jobs:
       - name: interactive shell boots
         run: zsh -i -c exit
 
-  # Full install weekly: catches Brewfile rot and macOS-update breakage
-  # before a fresh machine does.
   full-install:
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: brew bundle
         run: make brew
       - name: brew bundle check

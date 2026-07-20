@@ -16,7 +16,8 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "claude-opus-4-8",
+  "autoMemoryEnabled": true,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
@@ -40,19 +41,6 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/git-guardrail.sh"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/format-on-edit.sh",
-            "timeout": 30,
-            "statusMessage": "Formatting..."
           }
         ]
       }

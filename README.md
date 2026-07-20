@@ -118,10 +118,13 @@ The `claude` stow package symlinks settings into `~/.claude/`:
 | `CLAUDE.md` | Personal instructions injected into every session |
 | `statusline.sh` | Status line: model \| dir (branch) \| context % \| session cost |
 | `hooks/git-guardrail.sh` | PreToolUse hook — deterministically blocks force-push, `--no-verify`, amend-of-pushed, `reset --hard`, `clean -f` |
-| `hooks/format-on-edit.sh` | PostToolUse hook — runs the conform.nvim formatters on every file Claude writes |
-| `hooks/session-context.sh` | SessionStart (compact/resume) — re-injects fresh git state |
-| `agents/code-reviewer.md` | Fresh-context review subagent — reviews diffs without the bias of having written them |
+| `hooks/session-context.sh` | SessionStart (compact/resume only) — re-injects fresh git state after the built-in snapshot goes stale |
 | `skills/semble/` | Code-search skill — call shapes and CLI usage for semble |
+
+Hooks run harness-side and never enter model context; the only per-session
+context cost of this package is CLAUDE.md plus one description line per
+skill. Code formatting is deliberately **not** a global hook — that belongs
+to each project's pre-commit/CI.
 
 Per-machine overrides go in `~/.claude/settings.local.json` (untracked).
 
