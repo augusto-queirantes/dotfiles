@@ -43,23 +43,26 @@ feature_add() {
   repo_parent=$(dirname "$git_root")
 
   local slug
-  slug=$(printf '%s' "$desc" \
-    | tr '[:upper:]' '[:lower:]' \
-    | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g' \
-    | cut -c1-40 \
-    | sed -E 's/-+$//')
-  [[ -z "$slug" ]] && { echo "feature add: empty slug from: $desc" >&2; exit 1; }
+  slug=$(printf '%s' "$desc" |
+    tr '[:upper:]' '[:lower:]' |
+    sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g' |
+    cut -c1-40 |
+    sed -E 's/-+$//')
+  [[ -z "$slug" ]] && {
+    echo "feature add: empty slug from: $desc" >&2
+    exit 1
+  }
 
   local branch="$slug"
   local worktree_path="$repo_parent/$repo_name-$slug"
 
   local n=2
-  while git -C "$git_root" show-ref --verify --quiet "refs/heads/$branch" \
-     || git -C "$git_root" show-ref --verify --quiet "refs/remotes/origin/$branch" \
-     || [[ -e "$worktree_path" ]]; do
+  while git -C "$git_root" show-ref --verify --quiet "refs/heads/$branch" ||
+    git -C "$git_root" show-ref --verify --quiet "refs/remotes/origin/$branch" ||
+    [[ -e "$worktree_path" ]]; do
     branch="$slug-$n"
     worktree_path="$repo_parent/$repo_name-$slug-$n"
-    n=$((n+1))
+    n=$((n + 1))
   done
 
   echo "→ fetching origin/main"
@@ -80,11 +83,11 @@ feature_add() {
     echo "→ tmux session $session"
     tmux new-session -ds "$session" -c "$worktree_path" -n claude \
       "claude --plugin-dir ~/Personal/conclave; exec ${SHELL:-/bin/zsh}"
-    tmux new-window  -t "$session:" -c "$worktree_path" -n shell
+    tmux new-window -t "$session:" -c "$worktree_path" -n shell
     tmux select-window -t "$session:1"
 
-    tmux set-option -t "$session" -q @feature_worktree  "$worktree_path"
-    tmux set-option -t "$session" -q @feature_branch    "$branch"
+    tmux set-option -t "$session" -q @feature_worktree "$worktree_path"
+    tmux set-option -t "$session" -q @feature_branch "$branch"
     tmux set-option -t "$session" -q @feature_repo_root "$git_root"
   fi
 
@@ -101,8 +104,14 @@ feature_remove() {
   local session=""
   while [[ $# -gt 0 ]]; do
     case "$1" in
-      -*) echo "feature remove: unknown flag: $1" >&2; exit 2 ;;
-      *)  session="$1"; shift ;;
+      -*)
+        echo "feature remove: unknown flag: $1" >&2
+        exit 2
+        ;;
+      *)
+        session="$1"
+        shift
+        ;;
     esac
   done
 
@@ -120,8 +129,8 @@ feature_remove() {
   fi
 
   local worktree branch repo_root
-  worktree=$(tmux  show-options -t "$session" -v @feature_worktree  2>/dev/null || true)
-  branch=$(tmux    show-options -t "$session" -v @feature_branch    2>/dev/null || true)
+  worktree=$(tmux show-options -t "$session" -v @feature_worktree 2>/dev/null || true)
+  branch=$(tmux show-options -t "$session" -v @feature_branch 2>/dev/null || true)
   repo_root=$(tmux show-options -t "$session" -v @feature_repo_root 2>/dev/null || true)
 
   if [[ -z "$worktree" || -z "$repo_root" ]]; then
@@ -139,8 +148,8 @@ feature_remove() {
     fi
   fi
 
-  if [[ -n "$branch" ]] \
-     && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+  if [[ -n "$branch" ]] &&
+    git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
     if [[ -n "$(git -C "$repo_root" log "origin/main..$branch" --oneline 2>/dev/null)" ]]; then
       unmerged="yes"
     fi
@@ -148,9 +157,9 @@ feature_remove() {
 
   echo "About to destroy:"
   echo "  worktree: $worktree"
-  [[ -n "$branch"  ]] && echo "  branch:   $branch"
+  [[ -n "$branch" ]] && echo "  branch:   $branch"
   echo "  session:  $session"
-  [[ -n "$dirty"    ]] && echo "  ! worktree has uncommitted changes"
+  [[ -n "$dirty" ]] && echo "  ! worktree has uncommitted changes"
   [[ -n "$unmerged" ]] && echo "  ! branch has commits not in origin/main"
 
   cd "$repo_root"
@@ -164,8 +173,8 @@ feature_remove() {
     fi
   fi
 
-  if [[ -n "$branch" ]] \
-     && git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
+  if [[ -n "$branch" ]] &&
+    git -C "$repo_root" rev-parse --verify "refs/heads/$branch" >/dev/null 2>&1; then
     echo "→ deleting branch $branch"
     if [[ -n "$unmerged" ]]; then
       git -C "$repo_root" branch -D "$branch"
@@ -184,8 +193,11 @@ cmd="${1:-}"
 [[ $# -gt 0 ]] && shift
 
 case "$cmd" in
-  add)               feature_add    "$@" ;;
-  remove|rm|end)     feature_remove "$@" ;;
-  -h|--help|help|"") usage 0 ;;
-  *) echo "feature: unknown subcommand: $cmd" >&2; usage 2 ;;
+  add) feature_add "$@" ;;
+  remove | rm | end) feature_remove "$@" ;;
+  -h | --help | help | "") usage 0 ;;
+  *)
+    echo "feature: unknown subcommand: $cmd" >&2
+    usage 2
+    ;;
 esac

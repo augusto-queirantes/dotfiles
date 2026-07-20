@@ -27,10 +27,9 @@ defaults write com.apple.dock mru-spaces -bool false
 mkdir -p "$HOME/Screenshots"
 defaults write com.apple.screencapture location -string "$HOME/Screenshots"
 defaults write com.apple.screencapture type -string "png"
+# NB: reported broken on recent macOS (window shadows still captured) — kept
+# because it is harmless; verify against macos-defaults.com when it matters.
 defaults write com.apple.screencapture disable-shadow -bool true
-
-# Disable press-and-hold for keys (better for vim)
-defaults write -g ApplePressAndHoldEnabled -bool false
 
 # Restart affected apps
 killall Finder Dock SystemUIServer 2>/dev/null || true

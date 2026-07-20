@@ -34,3 +34,5 @@ build/
 
 # Direnv
 .envrc
+
+**/.claude/settings.local.json

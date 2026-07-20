@@ -47,7 +47,7 @@ stow/nvim/.config/nvim/
     └── plugins/
         ├── colorscheme.lua        # tokyonight-moon
         ├── completion.lua         # blink.cmp + friendly-snippets
-        ├── editor.lua             # surround / flash / oil / todo / mini.ai / trouble / ts-autotag
+        ├── editor.lua             # surround / flash / neo-tree / todo / mini.ai / trouble / ts-autotag
         ├── formatting.lua         # conform.nvim + format-on-save
         ├── linting.lua            # nvim-lint
         ├── lsp.lua                # mason + mason-lspconfig + LspAttach
@@ -165,16 +165,20 @@ Format-on-save runs automatically unless disabled.
 Inside the picker: `<C-j>`/`<C-k>` move selection, `<C-q>` send to quickfix,
 `<Esc>` close.
 
-### File explorer (`oil.nvim`)
+### File explorer (`neo-tree.nvim`)
 
 | Keys           | Action                              |
 |----------------|-------------------------------------|
-| `-`            | Open parent directory as a buffer   |
-| `<leader>e`    | Open Oil in current file's dir      |
-| `q` (in Oil)   | Close                               |
+| `<leader>e`    | Toggle file tree                    |
+| `<leader>E`    | Focus file tree                     |
+| `<leader>r`    | Reveal current file in tree         |
+| `q` (in tree)  | Close                               |
 
-Oil **edits the filesystem like a buffer** — rename a file by editing the line
-and `:w`. Delete by removing the line. Create by adding a line.
+Inside the tree: `a` add, `d` delete, `r` rename, `x`/`c`/`p` cut/copy/paste,
+`?` shows all mappings. Follows the current file; gitignored files hidden.
+
+For a standalone manager with previews, `y` in the shell opens
+[yazi](https://github.com/sxyazi/yazi) (cd-on-quit wrapper in `.zshrc`).
 
 ### Diagnostics list (`trouble.nvim`)
 
@@ -212,7 +216,8 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 | [`nvim-lint`](https://github.com/mfussenegger/nvim-lint) | Linter framework. |
 | [`nvim-surround`](https://github.com/kylechui/nvim-surround) | Surround text-object operations. |
 | [`flash.nvim`](https://github.com/folke/flash.nvim) | Label-based jump motions. |
-| [`oil.nvim`](https://github.com/stevearc/oil.nvim) | Edit the filesystem like a buffer. |
+| [`neo-tree.nvim`](https://github.com/nvim-neo-tree/neo-tree.nvim) | File tree sidebar (`<leader>e`). |
+| [`nvim-treesitter-textobjects`](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) | Query definitions powering mini.ai's `af`/`if`/`ac`/`ic`/`ao`/`io`. |
 | [`todo-comments.nvim`](https://github.com/folke/todo-comments.nvim) | Highlight + search TODO/FIXME/HACK. |
 | [`mini.ai`](https://github.com/echasnovski/mini.ai) | Smarter text objects (treesitter-aware). |
 | [`trouble.nvim`](https://github.com/folke/trouble.nvim) | Diagnostics / symbols / quickfix list. |

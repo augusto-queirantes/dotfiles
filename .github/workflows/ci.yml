@@ -1,0 +1,52 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # Full install is on-demand: run it from the Actions tab before setting up
+  # a new machine. External drift (brew formula renames, macOS updates) is
+  # only caught when this runs, but that risk window only matters right
+  # before a fresh install anyway.
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: install shellcheck + shfmt
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck shfmt
+      - name: shellcheck
+        run: shellcheck install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+      - name: shfmt
+        run: shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+
+  stow-smoke:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: install stow
+        run: brew install stow
+      - name: stow + bin into runner HOME
+        run: make stow bin
+      - name: zsh config parses
+        run: |
+          zsh -n stow/zsh/.zshrc
+          zsh -n stow/zsh/.zshenv
+      - name: interactive shell boots
+        run: zsh -i -c exit
+
+  full-install:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: brew bundle
+        run: make brew
+      - name: brew bundle check
+        run: brew bundle check --file=Brewfile --verbose
+      - name: stow + bin
+        run: make stow bin
+      - name: interactive shell boots with real tools
+        run: zsh -i -c exit

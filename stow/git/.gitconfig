@@ -1,9 +1,6 @@
 [user]
 	name = Augusto Queirantes
 	email = augusto.queirantes.dev@gmail.com
-	# name and email are intentionally empty — set per machine with:
-	#   git config --global user.name "..."
-	#   git config --global user.email "..."
 
 [init]
 	defaultBranch = main
@@ -12,6 +9,19 @@
 	editor = nvim
 	pager = delta
 	excludesfile = ~/.gitignore_global
+	# fsmonitor daemon + untracked cache: git status on big trees goes from
+	# seconds to milliseconds (builtin since git 2.37, macOS supported).
+	fsmonitor = true
+	untrackedCache = true
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
 
 [interactive]
 	diffFilter = delta --color-only
@@ -27,6 +37,8 @@
 [diff]
 	algorithm = histogram
 	colorMoved = default
+	mnemonicPrefix = true
+	renames = true
 
 [pull]
 	rebase = true
@@ -34,13 +46,27 @@
 [rebase]
 	autoStash = true
 	autoSquash = true
+	updateRefs = true
 
 [push]
 	default = current
 	autoSetupRemote = true
+	followTags = true
 
 [fetch]
 	prune = true
+	pruneTags = true
+	all = true
+
+[commit]
+	verbose = true
+
+[rerere]
+	enabled = true
+	autoupdate = true
+
+[help]
+	autocorrect = prompt
 
 [color]
 	ui = auto
@@ -57,3 +83,10 @@
 	unstage = reset HEAD --
 	bclean = "!git branch --merged | grep -v '\\*\\|main\\|master' | xargs -n 1 git branch -d"
 	fpush = push --force-with-lease
+	# structural diff via difftastic (delta stays the default pager)
+	dft = "!GIT_EXTERNAL_DIFF=difft git diff"
+
+# Per-machine overrides (work email, signing keys). Untracked; last include
+# wins over everything above.
+[include]
+	path = ~/.gitconfig.local
