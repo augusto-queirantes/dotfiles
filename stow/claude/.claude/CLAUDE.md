@@ -30,10 +30,33 @@ matters. Return to terse once the risky part is past.
 
 End-of-turn summary: one or two sentences. What changed, what's next.
 
+### ADHD answer pattern
+
+Every answer follows the pattern from
+[ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd):
+
+1. **Lead with the next action.** First line = what to do, not context.
+2. **Number multi-step tasks.** One action per step, in execution order.
+3. **Restate state every turn.** One line: where we are, what's done,
+   what's left.
+4. **Specific time estimates.** "~3 min", never "a bit" or "shortly".
+5. **Cap lists at 5 items.** More than 5 → split into phases or cut.
+6. **Suppress tangents.** Park anything off-path in one line at the end,
+   or drop it.
+7. **Make wins visible.** Mark finished steps done explicitly.
+8. **Matter-of-fact errors.** What broke, the fix. No apology, no drama.
+9. **No preamble. No recap. No closers.** Never restate my question;
+   never end with "hope this helps" / "let me know".
+10. **End with one concrete next step.** Exactly one.
+
+When this conflicts with the style rules above, the ADHD pattern wins.
+
 ## Defaults
 
-- **Never `--force` push, `--no-verify`, or `--amend` a pushed commit**
-  without explicit permission.
+- Destructive git operations (force push, `--no-verify`, amending pushed
+  commits, `reset --hard`, `clean -f`) are **blocked deterministically** by
+  `~/.claude/hooks/git-guardrail.sh` (PreToolUse). Don't attempt them or
+  retry variants; ask me to run them instead.
 - **No emoji in code, commits, or PR bodies** unless I ask for them.
 - **Match the project's conventions over your own preferences** —
   read `git log --oneline -20` and a few neighbouring files first.
@@ -44,45 +67,8 @@ Prefer `rg` over `grep` and `fd` over `find`.
 
 ## Code Search
 
-`semble` is registered globally as an MCP server (`mcp__semble__search`,
-`mcp__semble__find_related`). It returns ranked, syntax-aware code chunks
-and burns ~98% fewer tokens than `rg` + `Read`.
-
-**Default for any semantic question** — "what does this codebase do?",
-"where is X handled?", "how does feature Y work?", "show me code like
-this". Call the MCP tool, pass `repo` as the project root (or an
-https:// git URL).
-
-**Fall back to `rg` / `fd` only for**:
-- exact literal strings (error messages, magic constants)
-- regex / multi-line patterns
-- filename globs or file-tree questions
-- refactor renames where you need every occurrence
-
-MCP call shape:
-
-```
-mcp__semble__search(query="authentication flow", repo="/abs/path/to/project", top_k=5)
-mcp__semble__find_related(file_path="src/auth.py", line=42, repo="/abs/path/to/project")
-```
-
-The server is started with `--include-text-files`, so the same call
-covers source, markdown, yaml, json, and other config formats — no need
-to re-issue queries per content type.
-
-CLI fallback (scripts, hooks, environments without MCP access):
-
-```bash
-semble search "authentication flow" .                   # default: code only
-semble search "deployment guide" . --include-text-files # also md/yaml/json
-semble search "save_pretrained" . -k 10
-semble find-related src/auth.py 42 .
-semble savings                                           # how much was saved
-```
-
-Notes:
-- `path` defaults to `.`; remote git URLs are accepted.
-- v0.2.0 has no persistent `index` subcommand and no `--content` flag — the
-  MCP server caches per-session; the CLI re-indexes per invocation (250ms).
-- Reach for `semble` *before* opening `Read` on a file you haven't
-  located yet. Once you know the file, `Read` is fine.
+Default to the `semble` MCP tools (`mcp__semble__search`,
+`mcp__semble__find_related`) for any semantic question about a codebase —
+ranked chunks at ~2% of the tokens of `rg` + `Read`. Fall back to `rg`/`fd`
+only for exact literals, regexes, filename globs, or every-occurrence
+rename sweeps. Call shapes, CLI usage, and version notes: `semble` skill.

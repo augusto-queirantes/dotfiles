@@ -8,7 +8,6 @@ moved=0
 shopt -s dotglob nullglob
 
 for pkg_dir in "$DOTFILES"/stow/*/; do
-  pkg=$(basename "$pkg_dir")
   while IFS= read -r src; do
     rel="${src#"$pkg_dir"}"
     target="$HOME/$rel"

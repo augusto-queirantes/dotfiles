@@ -16,14 +16,91 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-sonnet-4-6",
+  "model": "claude-fable-5[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  },
+  "sandbox": {
+    "enabled": true,
+    "excludedCommands": ["gh *", "docker *"],
+    "credentials": {
+      "files": [
+        { "path": "~/.ssh", "mode": "deny" },
+        { "path": "~/.aws/credentials", "mode": "deny" }
+      ]
+    }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/git-guardrail.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/format-on-edit.sh",
+            "timeout": 30,
+            "statusMessage": "Formatting..."
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "compact|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/session-context.sh"
+          }
+        ]
+      }
+    ]
+  },
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true
+    "gopls-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "calendar-manager@conclave": true,
+    "engineer@conclave": true,
+    "qa@conclave": true,
+    "scribe@conclave": true,
+    "foreman@conclave": true,
+    "datadog@claude-plugins-official": true,
+    "rainmaker@conclave": true
   },
-  "effortLevel": "high",
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "conclave": {
+      "source": {
+        "source": "github",
+        "repo": "augusto-queirantes/conclave"
+      }
+    }
+  },
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
 }

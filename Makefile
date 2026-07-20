@@ -1,19 +1,22 @@
 DOTFILES := $(shell pwd)
 STOW_PACKAGES := zsh starship alacritty tmux nvim git mise claude
 
-.PHONY: help setup brew backup stow unstow restow macos post bin clean
+.PHONY: help setup brew backup stow unstow restow macos post bin clean check lint brew-drift
 
 help:
 	@echo "Targets:"
-	@echo "  setup    Full bootstrap: brew + stow + macos + post"
-	@echo "  brew     Install Homebrew and run 'brew bundle'"
-	@echo "  backup   Move pre-existing real files out of \$$HOME (so stow can run)"
-	@echo "  stow     Symlink all configs into \$$HOME"
-	@echo "  unstow   Remove all symlinks"
-	@echo "  restow   Re-link (use after adding/renaming files)"
-	@echo "  macos    Apply macOS defaults"
-	@echo "  post     Post-install steps (TPM, mise plugins)"
-	@echo "  bin      Symlink bin/ scripts to ~/.local/bin"
+	@echo "  setup      Full bootstrap: brew + stow + macos + post"
+	@echo "  brew       Install Homebrew and run 'brew bundle'"
+	@echo "  backup     Move pre-existing real files out of \$$HOME (so stow can run)"
+	@echo "  stow       Symlink all configs into \$$HOME"
+	@echo "  unstow     Remove all symlinks"
+	@echo "  restow     Re-link (use after adding/renaming files)"
+	@echo "  macos      Apply macOS defaults"
+	@echo "  post       Post-install steps (TPM, mise plugins)"
+	@echo "  bin        Symlink bin/ scripts to ~/.local/bin"
+	@echo "  check      Verify: stow dry-run + brew bundle check + shell startup time"
+	@echo "  lint       shellcheck + shfmt over every script"
+	@echo "  brew-drift Show packages installed but not in the Brewfile (dry run)"
 
 setup: brew stow bin macos post
 	@echo ""
@@ -53,3 +56,27 @@ bin:
 		ln -sfn $(DOTFILES)/$$f $$HOME/.local/bin/$$name; \
 		echo "linked $$name"; \
 	done
+
+check:
+	@echo "── stow dry-run ──"
+	@for pkg in $(STOW_PACKAGES); do \
+		stow --dir=stow --target=$$HOME --restow --simulate $$pkg || exit 1; \
+	done
+	@echo "ok"
+	@echo "── brew bundle check ──"
+	@brew bundle check --file=Brewfile --verbose || true
+	@echo "── shell startup ──"
+	@if command -v hyperfine >/dev/null; then \
+		hyperfine --warmup 3 --min-runs 5 'zsh -i -c exit'; \
+	else \
+		time zsh -i -c exit; \
+	fi
+
+lint:
+	@shellcheck install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+	@shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+	@echo "lint ok"
+
+brew-drift:
+	@echo "Installed but not declared in the Brewfile (nothing is removed):"
+	@brew bundle cleanup --file=Brewfile || true

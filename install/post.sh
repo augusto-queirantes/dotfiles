@@ -28,11 +28,35 @@ if command -v uv >/dev/null 2>&1; then
       echo "Registering semble MCP server with Claude Code..."
       # --include-text-files extends indexing to .md/.yaml/.json so docs + config
       # are searchable through the same MCP call as source code.
-      claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files \
-        || echo "claude mcp add semble failed — register it manually."
+      claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files ||
+        echo "claude mcp add semble failed — register it manually."
     fi
   fi
 fi
+
+# atuin: one-time import of existing zsh history into its SQLite store.
+if command -v atuin >/dev/null 2>&1; then
+  marker="$HOME/.local/share/atuin/.imported"
+  if [[ ! -f "$marker" ]]; then
+    echo "Importing shell history into atuin..."
+    mkdir -p "$(dirname "$marker")"
+    atuin import auto && touch "$marker" || echo "atuin import failed — run 'atuin import auto' manually."
+  fi
+fi
+
+# git maintenance: launchd-scheduled prefetch + commit-graph. Registered in
+# ~/.gitconfig.local (untracked) so machine paths never land in the repo.
+# Add big/hot repos here as they appear.
+MAINTENANCE_REPOS=(
+  "$HOME/Personal/dotfiles"
+)
+touch "$HOME/.gitconfig.local"
+for repo in "${MAINTENANCE_REPOS[@]:-}"; do
+  if [[ -n "$repo" && -d "$repo/.git" ]]; then
+    git -C "$repo" config get --file "$HOME/.gitconfig.local" --all maintenance.repo 2>/dev/null | grep -qx "$repo" ||
+      git -C "$repo" maintenance register --config-file "$HOME/.gitconfig.local" >/dev/null 2>&1 || true
+  fi
+done
 
 # fzf shell integrations are loaded from .zshrc; nothing extra to install.
 
