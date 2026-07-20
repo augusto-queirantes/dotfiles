@@ -16,23 +16,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-opus-4-8",
-  "autoMemoryEnabled": true,
-  "statusLine": {
-    "type": "command",
-    "command": "~/.claude/statusline.sh",
-    "padding": 0
-  },
-  "sandbox": {
-    "enabled": true,
-    "excludedCommands": ["gh *", "docker *"],
-    "credentials": {
-      "files": [
-        { "path": "~/.ssh", "mode": "deny" },
-        { "path": "~/.aws/credentials", "mode": "deny" }
-      ]
-    }
-  },
+  "model": "opus[1m]",
   "hooks": {
     "PreToolUse": [
       {
@@ -56,6 +40,11 @@
         ]
       }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
   },
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
@@ -84,8 +73,28 @@
       }
     }
   },
+  "sandbox": {
+    "enabled": true,
+    "credentials": {
+      "files": [
+        {
+          "path": "~/.ssh",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.aws/credentials",
+          "mode": "deny"
+        }
+      ]
+    },
+    "excludedCommands": [
+      "gh *",
+      "docker *"
+    ]
+  },
   "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-daltonized",
   "inputNeededNotifEnabled": true,
