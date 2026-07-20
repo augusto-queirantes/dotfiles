@@ -34,11 +34,10 @@ autoload -Uz compinit
 _zcd_stale=("$HOME"/.zcompdump(N.mh+24))
 if (( $#_zcd_stale )); then compinit; else compinit -C; fi
 unset _zcd_stale
-# Byte-compile the dump in the background when it changed.
-{
-  zcd="$HOME/.zcompdump"
-  [[ -s "$zcd" && ( ! -s "$zcd.zwc" || "$zcd" -nt "$zcd.zwc" ) ]] && zcompile "$zcd"
-} &!
+# Byte-compile the dump when it changed (~5ms, and only after a rebuild).
+zcd="$HOME/.zcompdump"
+[[ -s "$zcd" && ( ! -s "$zcd.zwc" || "$zcd" -nt "$zcd.zwc" ) ]] && zcompile "$zcd"
+unset zcd
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zstyle ':completion:*' menu no          # fzf-tab renders the menu
