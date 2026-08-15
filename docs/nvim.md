@@ -15,7 +15,7 @@ make restow            # symlink config
 nvim                   # lazy.nvim bootstraps and installs plugins
 # inside nvim:
 :Mason                 # watch LSPs / formatters / linters install
-:checkhealth           # verify externals (node, ruby, go, elixir, …)
+:checkhealth           # verify externals (node, ruby, go, …)
 ```
 
 Plugin lock state lives in `stow/nvim/.config/nvim/lazy-lock.json`. Update with
@@ -37,7 +37,9 @@ stow/nvim/.config/nvim/
 │   ├── ruby_lsp.lua
 │   ├── vtsls.lua
 │   ├── gopls.lua
-│   └── lexical.lua
+│   ├── eslint.lua
+│   ├── jsonls.lua / cssls.lua / html.lua   # mason defaults, no overrides
+│   └── (ruby_lsp's cmd lives in lua/config/ruby_lsp_cmd.lua)
 └── lua/
     ├── config/
     │   ├── options.lua            # vim.opt.* settings
@@ -237,11 +239,20 @@ LSPs install via Mason; formatters/linters install via mason-tool-installer.
 | Language | LSP | Formatter | Linter |
 |----------|-----|-----------|--------|
 | **Lua**        | `lua_ls`    | `stylua`               | (LSP) |
-| **Ruby**       | `ruby_lsp`  | `rubocop`              | `rubocop` (via ruby_lsp) |
-| **TypeScript / JS** | `vtsls` | `prettierd`            | `eslint_d` |
+| **Ruby / Rails** | `ruby_lsp` (`.rb` + `.erb`) | `rubocop`, `erb_format` | `rubocop` (via ruby_lsp) |
+| **TypeScript / JS / React** | `vtsls` + `eslint` | `prettierd` | `eslint_d` |
 | **Go**         | `gopls`     | `goimports` + `gofumpt` | `golangci-lint` |
-| **Elixir**     | `lexical`   | `mix format`           | (LSP) |
-| **Markdown / JSON / YAML / HTML / CSS** | — | `prettierd` | — |
+| **JSON / CSS / HTML** | `jsonls`, `cssls`, `html` | `prettierd` | — |
+| **Markdown / YAML** | — | `prettierd` | — |
+
+`ruby_lsp` is not installed through mason: mason bakes one interpreter into the
+gem shebang, so a project on a different `.ruby-version` fails with
+`Bundler::RubyVersionMismatch`. It runs through `mise exec` instead — see
+`lua/config/ruby_lsp_cmd.lua`, and `install/post.sh` installs the gem per
+pinned ruby. Rails awareness comes from the project's own `ruby-lsp-rails` gem.
+
+Only the servers listed in `lua/plugins/lsp.lua` are enabled
+(`automatic_enable = false`); leftovers in mason stay dormant.
 
 Adding a language:
 
@@ -283,8 +294,9 @@ Adding a language:
 
 **An LSP isn't running.** `:LspInfo` shows attached clients and root_dir.
 `:Mason` confirms the server is installed; `:checkhealth lsp` checks the
-runtime. Make sure the project's runtime (Ruby/Node/Go/Elixir) is on `PATH` —
-`mise current` in the project dir.
+runtime. Make sure the project's runtime (Ruby/Node/Go) is on `PATH` —
+`mise current` in the project dir. For Ruby specifically, check that
+`mise exec -- ruby -v` inside the project matches its `.ruby-version`.
 
 **Format-on-save is stomping on my code.** Run `:FormatDisable!` for the buffer
 or `:FormatDisable` globally. To opt a filetype out permanently, remove it from

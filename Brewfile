@@ -1,7 +1,6 @@
 # Core
 brew "stow"
 brew "mise"
-brew "starship"
 brew "uv"               # Python runner; installs semble and runs its MCP via uvx
 
 # Shell extras
@@ -55,13 +54,18 @@ brew "aube"             # Node pkg manager with supply-chain gates; agent-instal
 # brew "pitchfork"      # daemon manager ("nicer foreman") — add on real need
 # brew "fnox"           # secrets manager — add if per-project secrets get messy
 
+# Toolchains not managed by mise. node/ruby/bun are pinned in
+# ~/.config/mise/config.toml; Go ships a single versioned toolchain and gopls
+# needs it on PATH at editor start, so it lives here.
+brew "go"
+
 # Language servers (used by Claude Code LSP plugins)
 brew "gopls"
 brew "typescript-language-server"
 brew "ruby-lsp"
 
 # GUI apps
-cask "alacritty"
+cask "ghostty"
 cask "raycast"
 
 # Font

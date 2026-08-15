@@ -63,8 +63,24 @@ _cached_eval fzf fzf --zsh                                  # Ctrl-T, Alt-C, ** 
 _cached_eval zoxide zoxide init zsh
 _cached_eval mise mise activate zsh
 _cached_eval atuin atuin init zsh --disable-up-arrow        # Ctrl-R history TUI; up-arrow stays native
-# --print-full-init: the stage-1 init would fork starship again every shell
-_cached_eval starship starship init zsh --print-full-init
+
+# ─── Prompt ──────────────────────────────────────────────────────────────────
+# Native zsh, replacing starship: one less binary, no init output to cache,
+# and vcs_info is a builtin so nothing forks at startup.
+autoload -Uz vcs_info add-zsh-hook
+zstyle ':vcs_info:*' enable git
+# check-for-changes runs a status scan per prompt. Worth it in normal repos;
+# set it to false if a very large monorepo makes the prompt feel sticky.
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' unstagedstr ' %F{yellow}*%f'
+zstyle ':vcs_info:git:*' stagedstr ' %F{green}+%f'
+zstyle ':vcs_info:git:*' formats ' %F{magenta}%b%f%u%c'
+zstyle ':vcs_info:git:*' actionformats ' %F{magenta}%b%f %F{red}(%a)%f%u%c'
+add-zsh-hook precmd vcs_info
+
+setopt PROMPT_SUBST
+# path  branch*+  ❯   — arrow turns red when the last command failed.
+PROMPT='%F{blue}%~%f${vcs_info_msg_0_} %(?.%F{green}.%F{red})❯%f '
 
 # ─── Plugins (installed via brew) ────────────────────────────────────────────
 # Order matters: fzf-tab after compinit, before autosuggestions;
@@ -81,9 +97,15 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # skip widget rebinding every prompt (~cuts ke
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # ─── Functions ───────────────────────────────────────────────────────────────
-# Default claude with the conclave plugin loaded.
+# Default claude with the conclave plugin loaded, plus the org-specific
+# auto-mode overlay when it exists. autoMode rules are only honoured from
+# user/flag/managed settings, and this repo's settings.json is public — so the
+# JustiFi half lives untracked in ~/.claude/. See docs/auto-mode.md.
 claude() {
-  command claude --plugin-dir "$HOME/Personal/conclave" "$@"
+  local overlay="$HOME/.claude/auto-mode.local.json"
+  local args=(--plugin-dir "$HOME/Personal/conclave")
+  [[ -f "$overlay" ]] && args+=(--settings "$overlay")
+  command claude "${args[@]}" "$@"
 }
 
 # yazi: cd to the directory you were in when quitting.
@@ -108,19 +130,6 @@ alias v="nvim"
 alias t="tmux"
 alias ts="tmux-sessionizer"
 alias ccu="bunx ccusage@latest"   # Claude Code usage/cost report
-
-# Org-specific auto-mode classifier rules. autoMode is only honoured from
-# user/flag/managed settings, and this repo's settings.json is public — so the
-# JustiFi half lives in an untracked overlay merged via --settings.
-# See docs/auto-mode.md.
-claude() {
-  local overlay="$HOME/.claude/auto-mode.local.json"
-  if [[ -f "$overlay" ]]; then
-    command claude --settings "$overlay" "$@"
-  else
-    command claude "$@"
-  fi
-}
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

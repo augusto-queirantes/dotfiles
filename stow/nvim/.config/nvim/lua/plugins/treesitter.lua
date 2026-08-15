@@ -9,7 +9,6 @@ local parsers = {
   "javascript", "typescript", "tsx", "jsdoc",
   "go", "gomod", "gowork", "gosum",
   "ruby", "embedded_template",
-  "elixir", "heex", "eex",
   "dockerfile", "sql",
   "lua", "vim", "vimdoc", "query",
 }

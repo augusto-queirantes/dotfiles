@@ -9,11 +9,30 @@ return {
     },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local servers = { "lua_ls", "ruby_lsp", "vtsls", "gopls", "lexical" }
+      -- rails: ruby_lsp (drives .rb and .erb), nodejs/ts/react: vtsls + eslint,
+      -- with jsonls/cssls/html covering the rest of a React tree. go: gopls.
+      local servers = {
+        "lua_ls",
+        "ruby_lsp",
+        "vtsls",
+        "eslint",
+        "gopls",
+        "jsonls",
+        "cssls",
+        "html",
+      }
+
+      -- ruby_lsp is deliberately absent: mason bakes one ruby into the gem
+      -- shebang, so it dies with a Bundler::RubyVersionMismatch in any project
+      -- pinned to a different ruby. lsp/ruby_lsp.lua runs it through mise
+      -- instead. Same reasoning keeps rubocop out of `tools`.
+      local mason_servers = vim.tbl_filter(function(s)
+        return s ~= "ruby_lsp"
+      end, servers)
 
       local tools = {
         "stylua",
-        "rubocop",
+        "erb-formatter",
         "prettierd",
         "gofumpt",
         "goimports",
@@ -22,9 +41,17 @@ return {
       }
 
       require("mason-lspconfig").setup({
-        ensure_installed = servers,
-        automatic_enable = true,
+        ensure_installed = mason_servers,
+        -- Enabling every mason-installed server drags in whatever is left over
+        -- from past experiments (pyright, the docker servers). Enable only what
+        -- is declared above.
+        automatic_enable = false,
       })
+      -- Must come after mason-lspconfig and before enable: nvim-lspconfig's own
+      -- lsp/ruby_lsp.lua overrides a cmd set in ours, but not one set here.
+      vim.lsp.config("ruby_lsp", { cmd = require("config.ruby_lsp_cmd").cmd })
+
+      vim.lsp.enable(servers)
 
       require("mason-tool-installer").setup({
         ensure_installed = tools,

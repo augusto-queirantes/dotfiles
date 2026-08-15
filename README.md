@@ -68,32 +68,30 @@ dotfiles/
 ├── docs/                 # per-tool cheatsheets (tmux, nvim, …)
 ├── stow/                 # each subdir is a stow package
 │   ├── zsh/.zshrc + .zshenv
-│   ├── starship/.config/starship.toml
-│   ├── alacritty/.config/alacritty/alacritty.toml
+│   ├── ghostty/.config/ghostty/config
 │   ├── tmux/.config/tmux/tmux.conf
 │   ├── nvim/.config/nvim/...
 │   ├── git/.gitconfig + .gitignore_global
 │   ├── mise/.config/mise/config.toml
 │   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, hooks, skills
 └── bin/                  # personal scripts → ~/.local/bin
-    ├── feature
     └── tmux-sessionizer
 ```
 
 ## Stack
 
 - **Shell:** zsh (bare, tuned for <70ms startup: static brew env, cached
-  compinit, cached tool inits) + starship prompt + zsh-autosuggestions +
+  compinit, cached tool inits) + native vcs_info prompt + zsh-autosuggestions +
   zsh-syntax-highlighting + fzf + fzf-tab + zoxide + atuin (Ctrl-R history)
-- **Terminal:** day to day inside [cmux](https://cmux.io); the Alacritty
+- **Terminal:** day to day inside [cmux](https://cmux.io); the Ghostty
   config (Tokyo Night Moon) is kept as the standalone fallback
 - **Multiplexer:** tmux + TPM (`tmux-sensible`, `resurrect`, `continuum`);
   `Ctrl-a` prefix; `prefix + f` opens [sesh](https://github.com/joshmedeski/sesh)
   (zoxide-aware session picker), `prefix + F` the classic sessionizer
 - **Editor:** Neovim + lazy.nvim — blink.cmp completion, conform.nvim
   format-on-save, nvim-lint, telescope (+ fzf-native, ui-select), treesitter
-  (main branch + textobjects), LSP via Mason (Ruby, TypeScript, Go, Elixir,
-  Lua), neo-tree, flash.nvim, nvim-surround, mini.ai, trouble.nvim, gitsigns,
+  (main branch + textobjects), LSP for Rails, TypeScript/React, Go, Lua and
+  the JSON/CSS/HTML trio (Ruby via mise, the rest via Mason), neo-tree, flash.nvim, nvim-surround, mini.ai, trouble.nvim, gitsigns,
   lualine, vim-tmux-navigator. Plugin versions pinned in `lazy-lock.json`.
   See [`docs/nvim.md`](docs/nvim.md).
 - **Runtimes:** mise (configure in `stow/mise/.config/mise/config.toml`)
@@ -138,9 +136,8 @@ semble -s user -- uvx --from "semble[mcp]" semble --include-text-files` (both
 idempotent), so the semble CLI and its MCP server are available to every
 Claude Code session.
 
-Feature workflow is driven by `bin/feature` rather than slash commands:
-`feature add <desc>` creates a worktree + tmux session and attaches;
-`feature remove` tears it down.
+Feature worktrees are created by hand (`git worktree add`) plus
+`tmux-sessionizer` to open a session on the new directory.
 
 ## Personal config
 

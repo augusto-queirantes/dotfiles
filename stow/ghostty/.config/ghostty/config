@@ -1,0 +1,40 @@
+# Ghostty — ported from the Alacritty config this replaces.
+# Reference: `ghostty +show-config --default`, `ghostty +list-themes`.
+# Validate after editing: `ghostty +validate-config`.
+
+# Tokyo Night Moon — pairs with the Neovim colorscheme. Ships with Ghostty,
+# so the 40 lines of palette the Alacritty config carried are unnecessary.
+theme = TokyoNight Moon
+
+font-family = JetBrainsMono Nerd Font
+font-size = 25
+
+window-padding-x = 12
+window-padding-y = 12
+# Grow padding so the final column/row is not clipped at odd window sizes.
+window-padding-balance = true
+macos-titlebar-style = hidden
+
+# Full opacity — readability over aesthetics, especially for Claude Code TUIs.
+background-opacity = 1
+
+# Critical for tmux/Neovim/Claude Code on macOS: makes Option send Alt so
+# Meta-prefixed bindings work. tmux.conf binds no-prefix Alt-arrows on this.
+macos-option-as-alt = true
+
+# Let tmux/SSH sessions read and write the system clipboard via OSC 52.
+# Claude Code uses this to copy from inside a tmux pane. Alacritty called
+# this `osc52 = "CopyPaste"`; `clipboard-read` defaults to `ask`.
+clipboard-read = allow
+clipboard-write = allow
+copy-on-select = clipboard
+
+cursor-style = block
+cursor-style-blink = false
+mouse-hide-while-typing = true
+
+# Shift-Enter: send a literal newline. Claude Code and many REPLs treat plain
+# Enter as submit. tmux forwards this as CSI u via extended-keys-format.
+keybind = shift+enter=text:\x1b[13;2u
+# Ctrl-Enter: alternate newline sequence some TUIs expect.
+keybind = ctrl+enter=text:\x1b[13;5u

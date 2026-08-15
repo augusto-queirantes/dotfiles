@@ -84,7 +84,7 @@ no context switch.
 | `Alt-←` / `Alt-↓` / `Alt-↑` / `Alt-→` | Resize (no prefix) |
 | `p H` / `p J` / `p K` / `p L`         | Resize (repeatable while prefix held) |
 
-Alt works because Alacritty has `option_as_alt = "Both"`.
+Alt works because Ghostty has `macos-option-as-alt = true`.
 
 ### Copy mode (vi)
 
@@ -102,7 +102,7 @@ Alt works because Alacritty has `option_as_alt = "Both"`.
 | `p P`             | Choose paste buffer                   |
 
 Mouse selection auto-copies to the system clipboard on release. `set-clipboard
-on` + Alacritty's `osc52 = "CopyPaste"` mean clipboard sync works **even over
+on` + Ghostty's `clipboard-read`/`clipboard-write = allow` mean clipboard sync works **even over
 SSH**.
 
 ### Popups
@@ -164,7 +164,7 @@ Snapshots live in `~/.local/share/tmux/resurrect/` (or
 Selecting an existing session **switches** to it; selecting a directory creates
 a session named after the basename (with `.` → `_`) and `cd`s into it. The
 script is symlinked to `~/.local/bin/tmux-sessionizer` by `make bin`, so it's
-also runnable from a plain shell — handy for `alacritty -e tmux-sessionizer`.
+also runnable from a plain shell — handy for `ghostty -e tmux-sessionizer`.
 
 To change search roots, edit the `ROOTS=( ... )` array at the top of
 `bin/tmux-sessionizer`.
@@ -220,8 +220,8 @@ the Neovim side (`christoomey/vim-tmux-navigator`) is already wired in
 `stow/nvim/lua/plugins/misc.lua`.
 
 **Clipboard doesn't sync over SSH.** The remote terminal (or the local one
-hosting the SSH client) needs OSC 52 enabled. Alacritty does this with
-`osc52 = "CopyPaste"`. tmux side: `set-clipboard on` (already set).
+hosting the SSH client) needs OSC 52 enabled. Ghostty does this with
+`clipboard-read = allow` / `clipboard-write = allow`. tmux side: `set-clipboard on` (already set).
 
 **Reload config without restarting:** `p r`.
 
@@ -229,9 +229,9 @@ hosting the SSH client) needs OSC 52 enabled. Alacritty does this with
 
 **Shift-Enter / Ctrl-Enter doesn't reach Claude Code (or Neovim) inside tmux.**
 Need `set -s extended-keys always` and the `extkeys` terminal-feature for
-Alacritty (already in `tmux.conf`). Verify the outer terminal sends a CSI-u
+Ghostty (already in `tmux.conf`). Verify the outer terminal sends a CSI-u
 sequence: outside tmux, run `cat -v` and press Shift-Enter — you should see
-`^[[13;2u`. If you see only `^M`, fix the terminal first (Alacritty config has
+`^[[13;2u`. If you see only `^M`, fix the terminal first (the Ghostty config has
 a `Shift+Return` binding sending `[13;2u`). After editing tmux.conf,
 **`tmux kill-server` and start fresh** — `extended-keys` is a server option,
 `prefix r` won't pick it up.
