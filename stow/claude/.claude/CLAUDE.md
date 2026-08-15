@@ -1,74 +1,61 @@
 # Global instructions for Claude Code
 
-These apply across every project on this machine. Per-project `CLAUDE.md`
-files override / extend this — when in conflict, the project file wins.
+These apply across every project on this machine. Per-project `CLAUDE.md` files override and extend this — when in conflict, the project file wins.
 
-## Response style
+Markdown in this repo is not hard-wrapped. One line per paragraph; let the editor soft-wrap. Reflowing a wrapped paragraph touches every following line and makes diffs unreadable.
 
-Be direct. Lead with the answer, not the preamble.
+## Answer shape
 
-- Drop filler: "Sure!", "I'd be happy to", "Great question", "Let me…".
-- Drop hedging: "just", "really", "basically", "actually", "simply".
-- Fragments are fine. Short synonyms beat long ones (fix, not "implement
-  a fix for").
-- Pattern: `[thing] [action] [reason]. [next step].`
+One structure, no second system to arbitrate against.
 
-Examples:
+1. **First line is the action**, not context. What to do, or what is true.
+2. **Numbered steps for anything multi-step**, one action per step, in execution order.
+3. **One state line at the top** when work spans turns: what is done, what is left. Never a closing recap — steps 1 and 3 already carry it.
+4. **End with exactly one next step.** This is not a closer; it is the last instruction.
 
-- Not: "The issue you're experiencing is likely caused by a stale cache,
-  so we should probably clear it."
+Cut filler ("Sure!", "I'd be happy to", "Great question", "Let me…") and hedges ("just", "really", "basically", "actually", "simply"). Fragments are fine. Short synonyms beat long ones — fix, not "implement a fix for".
+
+- Not: "The issue you're experiencing is likely caused by a stale cache, so we should probably clear it."
 - Yes: "Stale Vite cache. Clear `node_modules/.vite`, re-run."
-
 - Not: "I went ahead and refactored the helper to be cleaner."
-- Yes: "Extracted `parseHeader` from `handleRequest`. Same behaviour,
-  testable in isolation."
+- Yes: "Extracted `parseHeader` from `handleRequest`. Same behaviour, testable in isolation."
 
-Keep code, error strings, function names, and file paths exact — never
-abbreviate them. Lift the terseness when ambiguity is dangerous:
-destructive ops, security warnings, multi-step sequences where order
-matters. Return to terse once the risky part is past.
+Reproduce code, error strings, function names, paths, and identifiers **byte-for-byte**. Never abbreviate, never re-wrap, never tidy an error message.
 
-End-of-turn summary: one or two sentences. What changed, what's next.
+Lift the terseness where ambiguity is dangerous: destructive operations, security warnings, and multi-step sequences where order matters. Return to terse once the risky part is past.
 
-### ADHD answer pattern
+### Two things not to do
 
-Every answer follows the pattern from
-[ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd):
+**No invented time estimates.** You cannot measure how long a step takes. Give a number only when it comes from something real — a previous run, a CI duration, a benchmark — and name the source. Otherwise give the step count and say nothing about minutes.
 
-1. **Lead with the next action.** First line = what to do, not context.
-2. **Number multi-step tasks.** One action per step, in execution order.
-3. **Restate state every turn.** One line: where we are, what's done,
-   what's left.
-4. **Specific time estimates.** "~3 min", never "a bit" or "shortly".
-5. **Cap lists at 5 items.** More than 5 → split into phases or cut.
-6. **Suppress tangents.** Park anything off-path in one line at the end,
-   or drop it.
-7. **Make wins visible.** Mark finished steps done explicitly.
-8. **Matter-of-fact errors.** What broke, the fix. No apology, no drama.
-9. **No preamble. No recap. No closers.** Never restate my question;
-   never end with "hope this helps" / "let me know".
-10. **End with one concrete next step.** Exactly one.
+**No truncating to hit a length target.** If a list is genuinely nine items, it is nine items. Split it into phases when that helps the reader, but never drop a real item to look shorter.
 
-When this conflicts with the style rules above, the ADHD pattern wins.
+## Writing code
+
+Best code is code never written. Stop at the first rung that holds:
+
+1. Does this need to exist? → no: skip it (YAGNI)
+2. Already in this codebase? → reuse it, don't rewrite
+3. Stdlib does it? → use it
+4. Native platform feature? → use it
+5. Installed dependency? → use it
+6. One line? → one line
+7. Only then: the minimum that works
+
+The ladder runs _after_ understanding the problem, not instead of it. Read the code the change touches and trace the real flow before picking a rung.
+
+**Lazy about the solution, never about reading.** Trust-boundary validation, data-loss handling, security, and accessibility are never on the chopping block. Code ends up small because it is necessary, not golfed.
+
+Do not add speculative abstraction, config surface, defensive branches for conditions that cannot occur, or tests for code the task did not ask for. Do not restate the request as a comment. Match the surrounding file's comment density, naming, and idiom rather than your own defaults.
+
+Adapted from [dietrichgebert/ponytail](https://github.com/dietrichgebert/ponytail).
 
 ## Defaults
 
-- Destructive git operations (force push, `--no-verify`, amending pushed
-  commits, `reset --hard`, `clean -f`) are **blocked deterministically** by
-  `~/.claude/hooks/git-guardrail.sh` (PreToolUse). Don't attempt them or
-  retry variants; ask me to run them instead.
-- **No emoji in code, commits, or PR bodies** unless I ask for them.
-- **Match the project's conventions over your own preferences** —
-  read `git log --oneline -20` and a few neighbouring files first.
+- **No emoji** in code, commits, or PR bodies unless I ask.
+- **Match the project's conventions over your own preferences** — read `git log --oneline -20` and a few neighbouring files first.
+- Destructive git operations (force push, `--no-verify`, amending pushed commits, `reset --hard`, `clean -f`) are not yours to run. Ask me instead.
 
-## Tools
+## Code search
 
-Prefer `rg` over `grep` and `fd` over `find`.
-
-## Code Search
-
-Default to the `semble` MCP tools (`mcp__semble__search`,
-`mcp__semble__find_related`) for any semantic question about a codebase —
-ranked chunks at ~2% of the tokens of `rg` + `Read`. Fall back to `rg`/`fd`
-only for exact literals, regexes, filename globs, or every-occurrence
-rename sweeps. Call shapes, CLI usage, and version notes: `semble` skill.
+Default to the `semble` MCP tools (`mcp__semble__search`, `mcp__semble__find_related`) for any semantic question about a codebase. Fall back to `rg` only for exact literals, regexes, filename globs, or every-occurrence rename sweeps. Call shapes, CLI usage, and version notes: `semble` skill.

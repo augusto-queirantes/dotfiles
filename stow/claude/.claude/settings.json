@@ -18,17 +18,6 @@
   },
   "model": "opus[1m]",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/git-guardrail.sh"
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "matcher": "compact|resume",
@@ -49,15 +38,9 @@
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "gopls-lsp@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "calendar-manager@conclave": true,
     "engineer@conclave": true,
-    "qa@conclave": true,
-    "scribe@conclave": true,
-    "foreman@conclave": true,
-    "datadog@claude-plugins-official": true,
-    "rainmaker@conclave": true
+    "datadog@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
@@ -92,12 +75,58 @@
       "docker *"
     ]
   },
-  "effortLevel": "xhigh",
+  "effortLevel": "high",
   "tui": "fullscreen",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: None configured",
+      "**Repository visibility**: Public — github.com/augusto-queirantes/dotfiles",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: Default branch `main`; no rulesets or protected branches listed on augusto-queirantes/dotfiles",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Source control**: The trusted repo (github.com/augusto-queirantes/dotfiles) and its remote only — no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: None configured",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment (hyphen/underscore/dot-delimited — e.g. matches `prod-db`, not `producer`)",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development (dotfiles / dev-environment tooling)",
+      "**Trusted repo**: /Users/augustoqueirantes/Personal/dotfiles (github.com/augusto-queirantes/dotfiles) — public repo; since content ported or first read from outside this session's repo is not its own work, only this repo's own work should be pushed here, and secrets/sensitive data are never cleared into it by visibility alone",
+      "**Org-specific CLIs**: aws, kubectl, docker, gh, stow, brew, mise — installed on this machine; no org account, cluster, or registry detail is recorded in this file (it is public). Org-specific rules load from an untracked overlay via `--settings`; see docs/auto-mode.md."
+    ],
+    "allow": [
+      "Read-only inspection anywhere on this machine: listing files, reading source, `git log` / `git diff` / `git status`, `rg` / `fd` / `bat` / `jq`, and `gh api GET` requests.",
+      "Any edit, build, test, lint, or format command scoped to files inside the git repo the session is working in.",
+      "Local dev-environment management that touches only this machine's own tooling: `stow`, `brew bundle`, `mise`, `tmux`, and re-running install scripts from the trusted repo.",
+      "Creating branches, staging, and committing in any repo."
+    ],
+    "soft_deny": [
+      "Any write to `~/.claude/settings.json`, `~/.claude/settings.local.json`, or a shell rc file (`.zshrc`, `.zshenv`, `.zprofile`) — these change what future sessions are permitted to do, so they stay a manual step.",
+      "`git push`, opening or merging a PR, and any other action that publishes to a remote.",
+      "Uninstalling or unlinking managed tooling: `brew uninstall`, `stow -D`, `mise uninstall`, or deleting files under `~/.config` or `~/.claude`.",
+      "Any command targeting a host, namespace, cluster, or container whose name carries `prod` or `production` as a whole word or name segment.",
+      "Destructive git operations — force push, `--no-verify`, amending pushed commits, `reset --hard`, `clean -f`. No hook guards these; ask before running any of them."
+    ],
+    "hard_deny": [
+      "Writing credentials, tokens, API keys, or any content read from `~/.zshenv.local`, `~/.ssh`, or `~/.aws` into the trusted repo — it is public (github.com/augusto-queirantes/dotfiles).",
+      "Sending repo contents, file listings, or command output to public paste, gist, or snippet services.",
+      "Recording JustiFi-internal identifiers — infrastructure names, hostnames, account IDs, cluster or namespace names, internal domains — into any file tracked by the trusted repo, since it is public."
+    ]
+  }
 }

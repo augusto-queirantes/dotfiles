@@ -109,6 +109,19 @@ alias t="tmux"
 alias ts="tmux-sessionizer"
 alias ccu="bunx ccusage@latest"   # Claude Code usage/cost report
 
+# Org-specific auto-mode classifier rules. autoMode is only honoured from
+# user/flag/managed settings, and this repo's settings.json is public — so the
+# JustiFi half lives in an untracked overlay merged via --settings.
+# See docs/auto-mode.md.
+claude() {
+  local overlay="$HOME/.claude/auto-mode.local.json"
+  if [[ -f "$overlay" ]]; then
+    command claude --settings "$overlay" "$@"
+  else
+    command claude "$@"
+  fi
+}
+
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
