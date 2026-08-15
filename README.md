@@ -117,7 +117,6 @@ The `claude` stow package symlinks settings into `~/.claude/`:
 | `settings.json` | Global settings — model, permissions, sandbox, hooks, statusline |
 | `CLAUDE.md` | Personal instructions injected into every session |
 | `statusline.sh` | Status line: model \| dir (branch) \| context % \| session cost |
-| `hooks/git-guardrail.sh` | PreToolUse hook — deterministically blocks force-push, `--no-verify`, amend-of-pushed, `reset --hard`, `clean -f` |
 | `hooks/session-context.sh` | SessionStart (compact/resume only) — re-injects fresh git state after the built-in snapshot goes stale |
 | `skills/semble/` | Code-search skill — call shapes and CLI usage for semble |
 
