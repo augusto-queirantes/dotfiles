@@ -27,9 +27,7 @@ return {
         css = { "prettierd" },
         scss = { "prettierd" },
         go = { "goimports", "gofumpt" },
-        elixir = { "mix" },
-        eelixir = { "mix" },
-        heex = { "mix" },
+        eruby = { "erb_format" },
       },
       default_format_opts = { lsp_format = "fallback" },
       format_on_save = function(bufnr)
@@ -39,8 +37,14 @@ return {
         return { timeout_ms = 1000, lsp_format = "fallback" }
       end,
       formatters = {
+        -- Through mise for the same reason as lsp/ruby_lsp.lua: the project's
+        -- .ruby-version decides which rubocop runs.
         rubocop = {
-          args = { "--server", "--autocorrect", "--force-exclusion", "--stderr", "--stdin", "$FILENAME" },
+          command = "mise",
+          args = {
+            "exec", "--", "rubocop",
+            "--server", "--autocorrect", "--force-exclusion", "--stderr", "--stdin", "$FILENAME",
+          },
         },
       },
     },

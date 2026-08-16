@@ -17,6 +17,23 @@ if command -v mise >/dev/null 2>&1; then
   mise install || echo "mise install failed — check ~/.config/mise/config.toml"
 fi
 
+# ruby-lsp / rubocop: one copy per mise-managed ruby. Neovim runs both through
+# `mise exec` so the project's .ruby-version picks the right one; mason is not
+# used for these because it bakes a single interpreter into the gem shebang.
+if command -v mise >/dev/null 2>&1; then
+  while read -r rb_version; do
+    [[ -n "$rb_version" ]] || continue
+    for gem_name in ruby-lsp rubocop; do
+      if mise exec "ruby@$rb_version" -- gem list -i "$gem_name" >/dev/null 2>&1; then
+        continue
+      fi
+      echo "Installing $gem_name for ruby $rb_version..."
+      mise exec "ruby@$rb_version" -- gem install "$gem_name" --no-document ||
+        echo "$gem_name install failed for ruby $rb_version — install it manually."
+    done
+  done < <(mise ls ruby --installed 2>/dev/null | awk '{print $2}')
+fi
+
 # semble: install the CLI globally and register its MCP server with Claude Code.
 if command -v uv >/dev/null 2>&1; then
   if ! command -v semble >/dev/null 2>&1; then

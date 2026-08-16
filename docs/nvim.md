@@ -15,7 +15,7 @@ make restow            # symlink config
 nvim                   # lazy.nvim bootstraps and installs plugins
 # inside nvim:
 :Mason                 # watch LSPs / formatters / linters install
-:checkhealth           # verify externals (node, ruby, go, elixir, …)
+:checkhealth           # verify externals (node, ruby, go, …)
 ```
 
 Plugin lock state lives in `stow/nvim/.config/nvim/lazy-lock.json`. Update with
@@ -37,7 +37,9 @@ stow/nvim/.config/nvim/
 │   ├── ruby_lsp.lua
 │   ├── vtsls.lua
 │   ├── gopls.lua
-│   └── lexical.lua
+│   ├── eslint.lua
+│   ├── jsonls.lua / cssls.lua / html.lua   # mason defaults, no overrides
+│   └── (ruby_lsp's cmd lives in lua/config/ruby_lsp_cmd.lua)
 └── lua/
     ├── config/
     │   ├── options.lua            # vim.opt.* settings
@@ -209,8 +211,8 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 | [`nvim-ts-autotag`](https://github.com/windwp/nvim-ts-autotag) | Auto-close JSX/TSX/HTML/HEEX tags. |
 | [`telescope.nvim`](https://github.com/nvim-telescope/telescope.nvim) | Fuzzy picker. With `fzf-native` (fast sort) and `ui-select` (uses Telescope as the picker for code actions etc). |
 | [`nvim-lspconfig`](https://github.com/neovim/nvim-lspconfig) | LSP client glue. Per-server config in `lsp/<name>.lua`. |
-| [`mason.nvim`](https://github.com/mason-org/mason.nvim) + [`mason-lspconfig.nvim`](https://github.com/mason-org/mason-lspconfig.nvim) | Installs LSP servers; `automatic_enable` calls `vim.lsp.enable` for each. |
-| [`mason-tool-installer.nvim`](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Keeps formatters/linters installed. |
+| [`mason.nvim`](https://github.com/mason-org/mason.nvim) + [`mason-lspconfig.nvim`](https://github.com/mason-org/mason-lspconfig.nvim) | Registry and lspconfig bridge. `automatic_enable = false`; servers are enabled explicitly. |
+| [`mason-tool-installer.nvim`](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Installs every mason package, servers included, at a pinned version. |
 | [`blink.cmp`](https://github.com/saghen/blink.cmp) | Completion (Rust-backed). Pulls `friendly-snippets`. |
 | [`conform.nvim`](https://github.com/stevearc/conform.nvim) | Formatter framework, format-on-save. |
 | [`nvim-lint`](https://github.com/mfussenegger/nvim-lint) | Linter framework. |
@@ -232,23 +234,36 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 
 ## Languages
 
-LSPs install via Mason; formatters/linters install via mason-tool-installer.
+Everything mason installs -- servers, formatters, linters -- is declared once
+in `mason_packages` in `lua/plugins/lsp.lua`, pinned as `name@version`.
+mason-lspconfig does no installing: its `ensure_installed` cannot pin a
+version, and an unpinned toolchain drifts per machine. Bump deliberately;
+`:Mason` shows what is behind.
 
 | Language | LSP | Formatter | Linter |
 |----------|-----|-----------|--------|
 | **Lua**        | `lua_ls`    | `stylua`               | (LSP) |
-| **Ruby**       | `ruby_lsp`  | `rubocop`              | `rubocop` (via ruby_lsp) |
-| **TypeScript / JS** | `vtsls` | `prettierd`            | `eslint_d` |
+| **Ruby / Rails** | `ruby_lsp` (`.rb` + `.erb`) | `rubocop`, `erb_format` | `rubocop` (via ruby_lsp) |
+| **TypeScript / JS / React** | `vtsls` + `eslint` | `prettierd` | `eslint_d` |
 | **Go**         | `gopls`     | `goimports` + `gofumpt` | `golangci-lint` |
-| **Elixir**     | `lexical`   | `mix format`           | (LSP) |
-| **Markdown / JSON / YAML / HTML / CSS** | — | `prettierd` | — |
+| **JSON / CSS / HTML** | `jsonls`, `cssls`, `html` | `prettierd` | — |
+| **Markdown / YAML** | — | `prettierd` | — |
+
+`ruby_lsp` is not installed through mason: mason bakes one interpreter into the
+gem shebang, so a project on a different `.ruby-version` fails with
+`Bundler::RubyVersionMismatch`. It runs through `mise exec` instead — see
+`lua/config/ruby_lsp_cmd.lua`, and `install/post.sh` installs the gem per
+pinned ruby. Rails awareness comes from the project's own `ruby-lsp-rails` gem.
+
+Only the servers listed in `lua/plugins/lsp.lua` are enabled
+(`automatic_enable = false`), so anything left in mason stays dormant.
 
 Adding a language:
 
 1. Add the LSP name to the `servers` table in `lua/plugins/lsp.lua` and create
    `lsp/<name>.lua` with the per-server config.
 2. Add the formatter to `formatters_by_ft` in `lua/plugins/formatting.lua` and
-   to the `tools` list in `lua/plugins/lsp.lua` (so mason installs it).
+   to `mason_packages` in `lua/plugins/lsp.lua`, with an explicit `@version`.
 3. Add the linter to `linters_by_ft` in `lua/plugins/linting.lua` and to the
    `tools` list in `lua/plugins/lsp.lua`.
 4. Add tree-sitter parsers to `lua/plugins/treesitter.lua`.
@@ -283,8 +298,9 @@ Adding a language:
 
 **An LSP isn't running.** `:LspInfo` shows attached clients and root_dir.
 `:Mason` confirms the server is installed; `:checkhealth lsp` checks the
-runtime. Make sure the project's runtime (Ruby/Node/Go/Elixir) is on `PATH` —
-`mise current` in the project dir.
+runtime. Make sure the project's runtime (Ruby/Node/Go) is on `PATH` —
+`mise current` in the project dir. For Ruby specifically, check that
+`mise exec -- ruby -v` inside the project matches its `.ruby-version`.
 
 **Format-on-save is stomping on my code.** Run `:FormatDisable!` for the buffer
 or `:FormatDisable` globally. To opt a filetype out permanently, remove it from

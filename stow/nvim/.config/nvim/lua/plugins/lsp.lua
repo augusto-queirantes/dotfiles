@@ -9,27 +9,66 @@ return {
     },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      local servers = { "lua_ls", "ruby_lsp", "vtsls", "gopls", "lexical" }
+      -- LSP servers to run, by lspconfig name.
+      -- rails: ruby_lsp (drives .rb and .erb), nodejs/ts/react: vtsls + eslint,
+      -- with jsonls/cssls/html covering the rest of a React tree. go: gopls.
+      local servers = {
+        "lua_ls",
+        "ruby_lsp",
+        "vtsls",
+        "eslint",
+        "gopls",
+        "jsonls",
+        "cssls",
+        "html",
+      }
 
-      local tools = {
-        "stylua",
-        "rubocop",
-        "prettierd",
-        "gofumpt",
-        "goimports",
-        "eslint_d",
-        "golangci-lint",
+      -- Everything mason installs, by mason package name, pinned. One list for
+      -- servers and tools alike: mason-lspconfig's ensure_installed cannot pin
+      -- a version, mason-tool-installer's can, and an unpinned toolchain drifts
+      -- per machine. Bump these deliberately -- `:Mason` shows what is behind.
+      --
+      -- ruby-lsp and rubocop are deliberately absent: mason bakes one ruby into
+      -- the gem shebang, so they die with Bundler::RubyVersionMismatch in any
+      -- project pinned to a different ruby. They run through mise instead; see
+      -- lua/config/ruby_lsp_cmd.lua and install/post.sh.
+      local mason_packages = {
+        -- servers
+        "lua-language-server@3.19.1",
+        "vtsls@0.3.0",
+        "eslint-lsp@4.10.0",
+        "gopls@v0.23.0",
+        "json-lsp@4.10.0",
+        "css-lsp@4.10.0",
+        "html-lsp@4.10.0",
+        -- formatters and linters
+        "stylua@v2.5.2",
+        "erb-formatter@0.7.3",
+        "prettierd@0.29.0",
+        "gofumpt@v0.11.0",
+        "goimports@v0.49.0",
+        "eslint_d@15.0.3",
+        "golangci-lint@v2.12.2",
       }
 
       require("mason-lspconfig").setup({
-        ensure_installed = servers,
-        automatic_enable = true,
+        -- Installation is mason-tool-installer's job (it can pin versions).
+        ensure_installed = {},
+        -- Enabling every mason-installed server drags in whatever is left over
+        -- from past experiments. Enable only what is declared above.
+        automatic_enable = false,
       })
 
       require("mason-tool-installer").setup({
-        ensure_installed = tools,
+        ensure_installed = mason_packages,
         run_on_start = true,
       })
+
+      -- Must come after mason-lspconfig and before enable: nvim-lspconfig's own
+      -- lsp/ruby_lsp.lua overrides a cmd set in ours, but not one set here.
+      vim.lsp.config("ruby_lsp", { cmd = require("config.ruby_lsp_cmd").cmd })
+
+      vim.lsp.enable(servers)
 
       vim.diagnostic.config({
         severity_sort = true,
