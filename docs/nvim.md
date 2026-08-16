@@ -211,8 +211,8 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 | [`nvim-ts-autotag`](https://github.com/windwp/nvim-ts-autotag) | Auto-close JSX/TSX/HTML/HEEX tags. |
 | [`telescope.nvim`](https://github.com/nvim-telescope/telescope.nvim) | Fuzzy picker. With `fzf-native` (fast sort) and `ui-select` (uses Telescope as the picker for code actions etc). |
 | [`nvim-lspconfig`](https://github.com/neovim/nvim-lspconfig) | LSP client glue. Per-server config in `lsp/<name>.lua`. |
-| [`mason.nvim`](https://github.com/mason-org/mason.nvim) + [`mason-lspconfig.nvim`](https://github.com/mason-org/mason-lspconfig.nvim) | Installs LSP servers; `automatic_enable` calls `vim.lsp.enable` for each. |
-| [`mason-tool-installer.nvim`](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Keeps formatters/linters installed. |
+| [`mason.nvim`](https://github.com/mason-org/mason.nvim) + [`mason-lspconfig.nvim`](https://github.com/mason-org/mason-lspconfig.nvim) | Registry and lspconfig bridge. `automatic_enable = false`; servers are enabled explicitly. |
+| [`mason-tool-installer.nvim`](https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim) | Installs every mason package, servers included, at a pinned version. |
 | [`blink.cmp`](https://github.com/saghen/blink.cmp) | Completion (Rust-backed). Pulls `friendly-snippets`. |
 | [`conform.nvim`](https://github.com/stevearc/conform.nvim) | Formatter framework, format-on-save. |
 | [`nvim-lint`](https://github.com/mfussenegger/nvim-lint) | Linter framework. |
@@ -234,7 +234,11 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 
 ## Languages
 
-LSPs install via Mason; formatters/linters install via mason-tool-installer.
+Everything mason installs -- servers, formatters, linters -- is declared once
+in `mason_packages` in `lua/plugins/lsp.lua`, pinned as `name@version`.
+mason-lspconfig does no installing: its `ensure_installed` cannot pin a
+version, and an unpinned toolchain drifts per machine. Bump deliberately;
+`:Mason` shows what is behind.
 
 | Language | LSP | Formatter | Linter |
 |----------|-----|-----------|--------|
@@ -252,14 +256,14 @@ gem shebang, so a project on a different `.ruby-version` fails with
 pinned ruby. Rails awareness comes from the project's own `ruby-lsp-rails` gem.
 
 Only the servers listed in `lua/plugins/lsp.lua` are enabled
-(`automatic_enable = false`); leftovers in mason stay dormant.
+(`automatic_enable = false`), so anything left in mason stays dormant.
 
 Adding a language:
 
 1. Add the LSP name to the `servers` table in `lua/plugins/lsp.lua` and create
    `lsp/<name>.lua` with the per-server config.
 2. Add the formatter to `formatters_by_ft` in `lua/plugins/formatting.lua` and
-   to the `tools` list in `lua/plugins/lsp.lua` (so mason installs it).
+   to `mason_packages` in `lua/plugins/lsp.lua`, with an explicit `@version`.
 3. Add the linter to `linters_by_ft` in `lua/plugins/linting.lua` and to the
    `tools` list in `lua/plugins/lsp.lua`.
 4. Add tree-sitter parsers to `lua/plugins/treesitter.lua`.

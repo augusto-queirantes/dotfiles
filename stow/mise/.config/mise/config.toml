@@ -1,4 +1,10 @@
+# Global runtimes. Pinned to exact patch versions on purpose: a floating major
+# ("24") silently changes what a fresh machine gets. Bump deliberately with
+# `mise latest <tool>`, then `mise install`.
+#
+# Per-project .ruby-version / .tool-versions still win over these; Neovim's
+# ruby-lsp resolves through `mise exec` for exactly that reason.
 [tools]
-node = "24"
-ruby = "3.4.8"
-bun = "1.3.13"
+node = "26.7.0"
+ruby = "4.0.6"
+bun = "1.3.14"
