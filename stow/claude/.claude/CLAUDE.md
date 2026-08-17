@@ -55,6 +55,7 @@ Adapted from [dietrichgebert/ponytail](https://github.com/dietrichgebert/ponytai
 - **No emoji** in code, commits, or PR bodies unless I ask.
 - **Match the project's conventions over your own preferences** — read `git log --oneline -20` and a few neighbouring files first.
 - Destructive git operations (force push, `--no-verify`, amending pushed commits, `reset --hard`, `clean -f`) are not yours to run. Ask me instead.
+- **NO COMMENTS ARE ALLOWED UNLESS IT DESCRIBES A BEHAVIOUR THAT CAN'T BE UNDERSTOOD ONLY BY READING THE CODE**. The reason you removed some piece of code, why that method is called by that name or why you added a new method are not good reasons. You can add a comment to explain something that lives outside of the code such as a regex explanation or something like this. Are you not 100% sure if that piece of code needs a comment? It do not need. It's either a hard yes or a no.
 
 ## Code search
 
