@@ -97,16 +97,6 @@ ZSH_AUTOSUGGEST_MANUAL_REBIND=1   # skip widget rebinding every prompt (~cuts ke
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 # ─── Functions ───────────────────────────────────────────────────────────────
-# Default claude with the conclave plugin loaded, plus the org-specific
-# auto-mode overlay when it exists. autoMode rules are only honoured from
-# user/flag/managed settings, and this repo's settings.json is public — so the
-# JustiFi half lives untracked in ~/.claude/. See docs/auto-mode.md.
-claude() {
-  local overlay="$HOME/.claude/auto-mode.local.json"
-  local args=(--plugin-dir "$HOME/Personal/conclave")
-  [[ -f "$overlay" ]] && args+=(--settings "$overlay")
-  command claude "${args[@]}" "$@"
-}
 
 # yazi: cd to the directory you were in when quitting.
 y() {
@@ -129,7 +119,8 @@ alias lg="lazygit"
 alias v="nvim"
 alias t="tmux"
 alias ts="tmux-sessionizer"
-alias ccu="bunx ccusage@latest"   # Claude Code usage/cost report
+alias main="git pull origin main"
+alias push="git push origin HEAD"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
