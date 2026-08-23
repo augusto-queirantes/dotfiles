@@ -16,7 +16,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "sonnet",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -25,6 +25,103 @@
           {
             "type": "command",
             "command": "~/.claude/hooks/session-context.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event session-start --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event user-prompt-submit --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event pre-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event post-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event pre-compact --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event stop --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event session-end --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event subagent-start --agent claude-code --server-url http://127.0.0.1:49374"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event subagent-stop --agent claude-code --server-url http://127.0.0.1:49374"
           }
         ]
       }
