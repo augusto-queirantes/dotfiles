@@ -41,7 +41,10 @@
     "frontend-design@claude-plugins-official": true,
     "engineer@conclave": true,
     "datadog@claude-plugins-official": true,
-    "architect@conclave": true
+    "architect@conclave": true,
+    "qa@conclave": true,
+    "ship@conclave": true,
+    "house@conclave": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
@@ -54,7 +57,8 @@
       "source": {
         "source": "github",
         "repo": "augusto-queirantes/conclave"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "sandbox": {
