@@ -10,123 +10,13 @@
       "Bash(jq *)",
       "Bash(curl -sL *)",
       "Bash(curl -fsSL *)",
-      "Bash(gh api GET *)",
+      "Bash(gh *)",
       "mcp__semble__search",
       "mcp__semble__find_related"
     ],
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
-  "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "compact|resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/session-context.sh"
-          }
-        ]
-      },
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event session-start --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event user-prompt-submit --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event pre-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event post-tool-use --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event pre-compact --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event stop --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event session-end --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "SubagentStart": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event subagent-start --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "/Users/augustoqueirantes/Applications/ai-memory/ai-memory --data-dir '/Users/augustoqueirantes/Library/Application Support/ai-memory' hook --event subagent-stop --agent claude-code --server-url http://127.0.0.1:49374"
-          }
-        ]
-      }
-    ]
-  },
+  "model": "opus",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
@@ -135,10 +25,11 @@
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
     "engineer@conclave": true,
     "datadog@claude-plugins-official": true,
-    "architect@conclave": true
+    "architect@conclave": true,
+    "qa@conclave": true,
+    "ship@conclave": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
@@ -174,11 +65,31 @@
     ]
   },
   "effortLevel": "high",
+  "modelSettings": {
+    "claude-fable-5": {
+      "effortLevel": "xhigh"
+    },
+    "claude-fable-5-1": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5-5": {
+      "effortLevel": "high"
+    }
+  },
+  "askUserQuestionTimeout": "never",
   "tui": "fullscreen",
   "autoMemoryEnabled": true,
   "skipDangerousModePermissionPrompt": true,
   "skipWorkflowUsageWarning": true,
   "theme": "dark-daltonized",
+  "editorMode": "vim",
+  "verbose": false,
+  "preferredNotifChannel": "auto",
+  "autoContinueAtUsageLimit": true,
+  "remoteControlAtStartup": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
@@ -226,5 +137,6 @@
       "**Trusted repo**: /Users/augustoqueirantes/Personal/dotfiles (github.com/augusto-queirantes/dotfiles) — public repo; since content ported or first read from outside this session's repo is not its own work, only this repo's own work should be pushed here, and secrets/sensitive data are never cleared into it by visibility alone",
       "**Org-specific CLIs**: aws, kubectl, docker, gh, stow, brew, mise — installed on this machine; no org account, cluster, or registry detail is recorded in this file (it is public). Org-specific rules load from an untracked overlay via `--settings`; see docs/auto-mode.md."
     ]
-  }
+  },
+  "outputStyle": "Simpler Answers"
 }

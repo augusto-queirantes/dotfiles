@@ -18,9 +18,9 @@ jobs:
       - name: install shellcheck + shfmt
         run: sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck shfmt
       - name: shellcheck
-        run: shellcheck install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+        run: shellcheck install/*.sh bin/* stow/claude/.claude/statusline.sh
       - name: shfmt
-        run: shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+        run: shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/statusline.sh
 
   stow-smoke:
     runs-on: macos-latest
