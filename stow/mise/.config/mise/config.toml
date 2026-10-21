@@ -5,6 +5,6 @@
 # Per-project .ruby-version / .tool-versions still win over these; Neovim's
 # ruby-lsp resolves through `mise exec` for exactly that reason.
 [tools]
-node = "26.7.0"
-ruby = "4.0.6"
-bun = "1.3.14"
+node = "26.12.0"
+ruby = "4.0.7"
+bun = "1.4.3"
