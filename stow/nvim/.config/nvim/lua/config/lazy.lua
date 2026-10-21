@@ -11,5 +11,9 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = { { import = "plugins" } },
   install = { colorscheme = { "tokyonight-moon" } },
-  checker = { enabled = true, notify = false },
+  -- No background update checker: plugins move only when lazy-lock.json is
+  -- bumped on purpose. The checker ran git fetch for every plugin each hour
+  -- in every open nvim and kept ~440 KB of heap per run for the life of the
+  -- session.
+  checker = { enabled = false },
 })

@@ -19,7 +19,8 @@ nvim                   # lazy.nvim bootstraps and installs plugins
 ```
 
 Plugin lock state lives in `stow/nvim/.config/nvim/lazy-lock.json`. Update with
-`:Lazy update` and commit the lockfile.
+`:Lazy update` and commit the lockfile. There is no background update check;
+plugins move only when you run it.
 
 Language runtimes are managed by **mise** — set what you need in
 `stow/mise/.config/mise/config.toml` (or per-project `mise.toml`).
@@ -45,6 +46,7 @@ stow/nvim/.config/nvim/
     │   ├── options.lua            # vim.opt.* settings
     │   ├── keymaps.lua            # global keymaps
     │   ├── autocmds.lua           # global autocmds
+    │   ├── heap_watch.lua         # warns once if the Lua heap passes 1 GB
     │   └── lazy.lua               # lazy.nvim bootstrap
     └── plugins/
         ├── colorscheme.lua        # tokyonight-moon
@@ -235,7 +237,7 @@ Loaded via [`lazy.nvim`](https://github.com/folke/lazy.nvim).
 ## Languages
 
 Everything mason installs -- servers, formatters, linters -- is declared once
-in `mason_packages` in `lua/plugins/lsp.lua`, pinned as `name@version`.
+in `mason_packages` in `lua/plugins/lsp.lua`, pinned as `{ "name", version = "x" }`.
 mason-lspconfig does no installing: its `ensure_installed` cannot pin a
 version, and an unpinned toolchain drifts per machine. Bump deliberately;
 `:Mason` shows what is behind.
@@ -263,9 +265,9 @@ Adding a language:
 1. Add the LSP name to the `servers` table in `lua/plugins/lsp.lua` and create
    `lsp/<name>.lua` with the per-server config.
 2. Add the formatter to `formatters_by_ft` in `lua/plugins/formatting.lua` and
-   to `mason_packages` in `lua/plugins/lsp.lua`, with an explicit `@version`.
-3. Add the linter to `linters_by_ft` in `lua/plugins/linting.lua` and to the
-   `tools` list in `lua/plugins/lsp.lua`.
+   to `mason_packages` in `lua/plugins/lsp.lua`, with an explicit `version`.
+3. Add the linter to `linters_by_ft` in `lua/plugins/linting.lua` and to
+   `mason_packages` in `lua/plugins/lsp.lua`.
 4. Add tree-sitter parsers to `lua/plugins/treesitter.lua`.
 5. Make sure the runtime is on `mise` (or `PATH`).
 
