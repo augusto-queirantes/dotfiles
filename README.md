@@ -73,7 +73,7 @@ dotfiles/
 │   ├── nvim/.config/nvim/...
 │   ├── git/.gitconfig + .gitignore_global
 │   ├── mise/.config/mise/config.toml
-│   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, hooks, skills
+│   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, output style
 └── bin/                  # personal scripts → ~/.local/bin
     └── tmux-sessionizer
 ```
@@ -100,11 +100,11 @@ dotfiles/
   hyperfine, xh, glow, tree
 - **Code search for agents:** [semble](https://github.com/MinishLab/semble) —
   installed via `uv tool install semble`, registered as a global Claude Code
-  MCP server; usage lives in the `semble` skill so every session prefers it
+  MCP server; the global `CLAUDE.md` tells every session to prefer it
   over `grep`+`Read` for semantic lookups.
 - **Other:** Raycast, JetBrainsMono Nerd Font
-- **AI assistant:** Claude Code with global `CLAUDE.md`, guardrail/format
-  hooks, statusline, and language server plugins (Ruby, TypeScript/JS, Go).
+- **AI assistant:** Claude Code with global `CLAUDE.md`, a default output
+  style, statusline, and language server plugins (Ruby, TypeScript/JS).
 
 ## Claude Code setup
 
@@ -112,16 +112,12 @@ The `claude` stow package symlinks settings into `~/.claude/`:
 
 | Path | What it is |
 |------|-----------|
-| `settings.json` | Global settings — model, permissions, sandbox, hooks, statusline |
+| `settings.json` | Global settings — model, output style, permissions, sandbox, statusline |
 | `CLAUDE.md` | Personal instructions injected into every session |
+| `output-styles/simpler-answers.md` | "Simpler Answers" output style, set as default via `outputStyle` — terse, action-first answers |
 | `statusline.sh` | Status line: model \| dir (branch) \| context % \| session cost |
-| `hooks/session-context.sh` | SessionStart (compact/resume only) — re-injects fresh git state after the built-in snapshot goes stale |
-| `skills/semble/` | Code-search skill — call shapes and CLI usage for semble |
 
-Hooks run harness-side and never enter model context; the only per-session
-context cost of this package is CLAUDE.md plus one description line per
-skill. Code formatting is deliberately **not** a global hook — that belongs
-to each project's pre-commit/CI.
+No global hooks. Code formatting belongs to each project's pre-commit/CI.
 
 Per-machine overrides go in `~/.claude/settings.local.json` (untracked).
 

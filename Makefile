@@ -73,8 +73,8 @@ check:
 	fi
 
 lint:
-	@shellcheck install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
-	@shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/hooks/*.sh stow/claude/.claude/statusline.sh
+	@shellcheck install/*.sh bin/* stow/claude/.claude/statusline.sh
+	@shfmt -d -i 2 -ci install/*.sh bin/* stow/claude/.claude/statusline.sh
 	@echo "lint ok"
 
 brew-drift:
