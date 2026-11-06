@@ -34,21 +34,21 @@ return {
       -- lua/config/ruby_lsp_cmd.lua and install/post.sh.
       local mason_packages = {
         -- servers
-        "lua-language-server@3.19.1",
-        "vtsls@0.3.0",
-        "eslint-lsp@4.10.0",
-        "gopls@v0.23.0",
-        "json-lsp@4.10.0",
-        "css-lsp@4.10.0",
-        "html-lsp@4.10.0",
+        { "lua-language-server", version = "3.19.2" },
+        { "vtsls", version = "0.3.0" },
+        { "eslint-lsp", version = "4.10.0" },
+        { "gopls", version = "v0.23.0" },
+        { "json-lsp", version = "4.10.0" },
+        { "css-lsp", version = "4.10.0" },
+        { "html-lsp", version = "4.10.0" },
         -- formatters and linters
-        "stylua@v2.5.2",
-        "erb-formatter@0.7.3",
-        "prettierd@0.29.0",
-        "gofumpt@v0.11.0",
-        "goimports@v0.49.0",
-        "eslint_d@15.0.3",
-        "golangci-lint@v2.12.2",
+        { "stylua", version = "v2.6.0" },
+        { "erb-formatter", version = "0.7.3" },
+        { "prettierd", version = "0.29.0" },
+        { "gofumpt", version = "v0.12.0" },
+        { "goimports", version = "v0.52.0" },
+        { "eslint_d", version = "15.0.3" },
+        { "golangci-lint", version = "v2.15.0" },
       }
 
       require("mason-lspconfig").setup({
