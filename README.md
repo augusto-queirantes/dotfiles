@@ -75,6 +75,7 @@ dotfiles/
 │   ├── mise/.config/mise/config.toml
 │   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, output style
 └── bin/                  # personal scripts → ~/.local/bin
+    ├── git-protect-main  # global pre-push hook: no pushes to main/master
     └── tmux-sessionizer
 ```
 
