@@ -134,14 +134,17 @@
     "engineer@conclave": true,
     "datadog@claude-plugins-official": true,
     "architect@conclave": true,
-    "qa@conclave": true
+    "qa@conclave": true,
+    "ship@conclave": true,
+    "house@conclave": true
   },
   "extraKnownMarketplaces": {
     "conclave": {
       "source": {
         "source": "github",
         "repo": "augusto-queirantes/conclave"
-      }
+      },
+      "autoUpdate": true
     }
   },
   "sandbox": {
