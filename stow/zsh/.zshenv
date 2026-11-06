@@ -19,6 +19,10 @@ if [[ -x "$_just_bin" ]]; then
 fi
 unset _just_bin _just_cache
 
+# Maestri terminals export $MAESTRI_CLI without putting its folder on PATH,
+# and agents (and Maestri's own skills) call plain `maestri`.
+[[ -n "${MAESTRI_CLI-}" ]] && path=("${MAESTRI_CLI:h}" $path)
+
 # Machine-local env — API keys, tokens. Untracked; never put secrets in this
 # repo (it is public).
 [[ -f "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"
