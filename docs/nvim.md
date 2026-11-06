@@ -289,7 +289,7 @@ Adding a language:
 | `timeoutlen` | `300` | Snappier which-key popup. |
 | `expandtab` + `shiftwidth=2` | on | 2-space indent default; treesitter handles per-language. |
 | Format-on-save | on | Disable per-buffer with `:FormatDisable!`, globally with `:FormatDisable`. |
-| Inlay hints | auto-on per LSP | Toggle with `<leader>uh`. |
+| Inlay hints | off by default | Toggle with `<leader>uh`. |
 | Trim trailing whitespace | on | `BufWritePre` autocmd, runs in addition to formatters. |
 
 ---
