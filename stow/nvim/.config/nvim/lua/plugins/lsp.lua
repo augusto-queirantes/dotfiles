@@ -108,7 +108,6 @@ return {
 
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client:supports_method("textDocument/inlayHint") then
-            vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
             map("<leader>uh", function()
               vim.lsp.inlay_hint.enable(
                 not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }),

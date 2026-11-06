@@ -67,7 +67,7 @@ dotfiles/
 │   └── post.sh           # TPM, mise, atuin import, git maintenance, shell
 ├── docs/                 # per-tool cheatsheets (tmux, nvim, …)
 ├── stow/                 # each subdir is a stow package
-│   ├── zsh/.zshrc + .zshenv
+│   ├── zsh/.zshrc + .zshenv + .zprofile
 │   ├── ghostty/.config/ghostty/config
 │   ├── tmux/.config/tmux/tmux.conf
 │   ├── nvim/.config/nvim/...

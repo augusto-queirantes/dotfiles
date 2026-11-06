@@ -121,6 +121,7 @@ alias t="tmux"
 alias ts="tmux-sessionizer"
 alias main="git pull origin main"
 alias push="git push origin HEAD"
+alias kill-mcp-browsers="pkill -f 'chrome-devtools-mcp|playwright_chromiumdev_profile'"
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
