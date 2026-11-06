@@ -12,7 +12,20 @@
       "Bash(curl -fsSL *)",
       "Bash(gh *)",
       "mcp__semble__search",
-      "mcp__semble__find_related"
+      "mcp__semble__find_related",
+      "Bash(maestri *)"
+    ],
+    "ask": [
+      "Bash(maestri floor land *)",
+      "Bash(maestri floor delete *)",
+      "Bash(maestri dismiss *)",
+      "Bash(maestri note delete *)",
+      "Bash(maestri portal close *)",
+      "Bash(maestri routine delete *)",
+      "Bash(maestri partitura delete *)",
+      "Bash(maestri preset delete *)",
+      "Bash(maestri role delete *)",
+      "Bash(maestri computer control*)"
     ],
     "defaultMode": "auto"
   },
@@ -52,7 +65,10 @@
         }
       ]
     },
-    "excludedCommands": ["gh *", "docker *"]
+    "excludedCommands": ["gh *", "docker *"],
+    "network": {
+      "allowAllUnixSockets": true
+    }
   },
   "effortLevel": "high",
   "modelSettings": {
