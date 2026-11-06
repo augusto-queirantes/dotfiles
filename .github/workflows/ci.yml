@@ -34,6 +34,7 @@ jobs:
         run: |
           zsh -n stow/zsh/.zshrc
           zsh -n stow/zsh/.zshenv
+          zsh -n stow/zsh/.zprofile
       - name: interactive shell boots
         run: zsh -i -c exit
 
