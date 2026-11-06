@@ -95,6 +95,13 @@
     helper =
     helper = !/opt/homebrew/bin/gh auth git-credential
 
+# Refuse pushes to main/master in every repo; changes land through a pull
+# request. Config-defined hooks (git 2.54+) run alongside a repo's own pre-push
+# hook, even under core.hooksPath. Apple's /usr/bin/git ignores this section.
+[hook "protect-main"]
+    event = pre-push
+    command = ~/.local/bin/git-protect-main
+
 # Per-machine overrides (work email, signing keys). Untracked; last include
 # wins over everything above.
 [include]
