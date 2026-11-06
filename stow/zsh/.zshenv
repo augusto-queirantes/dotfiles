@@ -23,6 +23,12 @@ unset _just_bin _just_cache
 # and agents (and Maestri's own skills) call plain `maestri`.
 [[ -n "${MAESTRI_CLI-}" ]] && path=("${MAESTRI_CLI:h}" $path)
 
+# Rex keeps its CLI inside the app bundle and links nothing onto PATH. Agents,
+# Rex's skill and its Claude Code SessionStart hook all call plain `rex`.
+_rex_bin="/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS"
+[[ -x "$_rex_bin/rex" ]] && path=("$_rex_bin" $path)
+unset _rex_bin
+
 # Machine-local env — API keys, tokens. Untracked; never put secrets in this
 # repo (it is public).
 [[ -f "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"

@@ -75,6 +75,15 @@ for repo in "${MAINTENANCE_REPOS[@]:-}"; do
   fi
 done
 
+# Rex: xterm-rex terminfo plus its ssh guard (keeps TERM safe on hosts without
+# the entry), and the skill + SessionStart hook for Claude Code and Codex. The
+# Claude hook is already committed in settings.json, so setup leaves it as is.
+REX="/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex"
+if [[ -x "$REX" ]]; then
+  "$REX" terminfo setup || echo "rex terminfo setup failed — run it manually."
+  "$REX" skill setup || echo "rex skill setup failed — run it manually."
+fi
+
 # fzf shell integrations are loaded from .zshrc; nothing extra to install.
 
 # Set zsh as default shell if it isn't
