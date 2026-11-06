@@ -65,7 +65,6 @@ brew "typescript-language-server"
 brew "ruby-lsp"
 
 # GUI apps
-cask "ghostty"
 cask "raycast"
 
 # Font
