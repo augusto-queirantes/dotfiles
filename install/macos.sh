@@ -31,6 +31,20 @@ defaults write com.apple.screencapture type -string "png"
 # because it is harmless; verify against macos-defaults.com when it matters.
 defaults write com.apple.screencapture disable-shadow -bool true
 
+# Rex appearance. Key bindings live in ~/.config/rex/init.lua; these are the
+# app's Settings window. Quit Rex before running this, or it overwrites them.
+defaults write com.superlogical.rex Workspace.appearance -string "dark"
+defaults write com.superlogical.rex Workspace.darkThemeID -string "merino-dark"
+defaults write com.superlogical.rex Workspace.lightThemeID -string "merino-light"
+defaults write com.superlogical.rex Workspace.terminalFontPointSize -float 18
+defaults write com.superlogical.rex Workspace.terminalFontSmoothing -bool true
+defaults write com.superlogical.rex Workspace.tabStyle -string "vertical"
+defaults write com.superlogical.rex Workspace.sidebarPosition -string "left"
+defaults write com.superlogical.rex Workspace.inactivePaneFadeMode -string "both"
+defaults write com.superlogical.rex Workspace.tabIconTintMode -string "off"
+defaults write com.superlogical.rex Workspace.usesStandardInactiveWindowPaneStyles -bool true
+defaults write com.superlogical.rex rex.agents.names-sessions -bool true
+
 # Restart affected apps
 killall Finder Dock SystemUIServer 2>/dev/null || true
 

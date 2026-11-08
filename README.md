@@ -68,7 +68,7 @@ dotfiles/
 ├── docs/                 # per-tool cheatsheets (tmux, nvim, …)
 ├── stow/                 # each subdir is a stow package
 │   ├── zsh/.zshrc + .zshenv + .zprofile
-│   ├── ghostty/.config/ghostty/config
+│   ├── rex/.config/rex/init.lua
 │   ├── tmux/.config/tmux/tmux.conf
 │   ├── nvim/.config/nvim/...
 │   ├── git/.gitconfig + .gitignore_global
@@ -83,8 +83,10 @@ dotfiles/
 - **Shell:** zsh (bare, tuned for <70ms startup: static brew env, cached
   compinit, cached tool inits) + native vcs_info prompt + zsh-autosuggestions +
   zsh-syntax-highlighting + fzf + fzf-tab + zoxide + atuin (Ctrl-R history)
-- **Terminal:** day to day inside [cmux](https://cmux.io); the Ghostty
-  config (Tokyo Night Moon) is kept as the standalone fallback
+- **Terminal:** Rex by Superlogical (preview build, installed by
+  `install/bootstrap.sh` from its update feed, then self-updating). Key
+  bindings in `stow/rex/.config/rex/init.lua`; theme and font are app settings,
+  applied by `install/macos.sh`
 - **Multiplexer:** tmux + TPM (`tmux-sensible`, `resurrect`, `continuum`);
   `Ctrl-a` prefix; `prefix + f` opens [sesh](https://github.com/joshmedeski/sesh)
   (zoxide-aware session picker), `prefix + F` the classic sessionizer
