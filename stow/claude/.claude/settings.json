@@ -17,6 +17,12 @@
     "defaultMode": "auto"
   },
   "model": "opus",
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "includeCoAuthoredBy": false,
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline.sh",
