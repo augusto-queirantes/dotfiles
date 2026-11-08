@@ -12,7 +12,8 @@
       "Bash(curl -fsSL *)",
       "Bash(gh *)",
       "mcp__semble__search",
-      "mcp__semble__find_related"
+      "mcp__semble__find_related",
+      "Bash(maestri *)"
     ],
     "defaultMode": "auto"
   },
@@ -61,7 +62,10 @@
         }
       ]
     },
-    "excludedCommands": ["gh *", "docker *"]
+    "excludedCommands": ["gh *", "docker *"],
+    "network": {
+      "allowAllUnixSockets": true
+    }
   },
   "effortLevel": "high",
   "modelSettings": {
