@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Applies the Maestri agent presets. Maestri keeps presets in its own store and
+# syncs them between Macs; this is the record of what they should be. Run it
+# from a Maestro terminal (the preset commands are Maestro only). Safe to rerun.
+# Model, effort and permission mode come from ~/.claude/settings.json unless a
+# preset's command overrides them.
+set -euo pipefail
+
+m="${MAESTRI_CLI:-maestri}"
+
+# name|command ("" is a plain shell)
+presets=(
+  "Claude Code|claude"
+  "Claude Light|claude --model sonnet --effort medium"
+  "Claude Plan|claude --permission-mode plan"
+  "Shell|"
+)
+
+# Maestri ships these; the agents here run on Claude Code only.
+unused=("Codex" "Antigravity" "OpenCode")
+
+for entry in "${presets[@]}"; do
+  name="${entry%%|*}"
+  cmd="${entry#*|}"
+  args=(--maestro off --chat off --quick-start on)
+  [[ -n "$cmd" ]] && args+=(--command "$cmd")
+  if "$m" preset show "$name" >/dev/null 2>&1; then
+    "$m" preset set "$name" "${args[@]}"
+  else
+    "$m" preset create "$name" "${args[@]}"
+  fi
+done
+
+for name in "${unused[@]}"; do
+  if "$m" preset show "$name" >/dev/null 2>&1; then
+    "$m" preset delete "$name"
+  fi
+done
+
+"$m" preset list
