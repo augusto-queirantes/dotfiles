@@ -119,7 +119,8 @@ alias lg="lazygit"
 alias v="nvim"
 alias t="tmux"
 alias ts="tmux-sessionizer"
-alias main="git pull origin main"
+alias main="git switch main && git pull"
+alias pull_main="git pull origin main"
 alias push="git push origin HEAD"
 
 # bun completions

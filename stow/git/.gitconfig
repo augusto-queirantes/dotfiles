@@ -86,6 +86,15 @@
 	# structural diff via difftastic (delta stays the default pager)
 	dft = "!GIT_EXTERNAL_DIFF=difft git diff"
 
+# HTTPS auth through gh's token (what `gh auth setup-git` writes). The empty
+# helper clears any helper set earlier, such as osxkeychain from Apple's git.
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
 # Per-machine overrides (work email, signing keys). Untracked; last include
 # wins over everything above.
 [include]
