@@ -108,17 +108,7 @@
       "Bash(supabase functions deploy*)",
       "Bash(npx supabase*)",
       "Bash(bunx supabase*)",
-      "Bash(psql*supabase*)",
-      "Bash(maestri floor land *)",
-      "Bash(maestri floor delete *)",
-      "Bash(maestri dismiss *)",
-      "Bash(maestri note delete *)",
-      "Bash(maestri portal close *)",
-      "Bash(maestri routine delete *)",
-      "Bash(maestri partitura delete *)",
-      "Bash(maestri preset delete *)",
-      "Bash(maestri role delete *)",
-      "Bash(maestri computer control*)"
+      "Bash(psql*supabase*)"
     ],
     "defaultMode": "auto"
   },
