@@ -61,7 +61,10 @@ _cached_eval() {
 
 _cached_eval fzf fzf --zsh                                  # Ctrl-T, Alt-C, ** completion
 _cached_eval zoxide zoxide init zsh
-_cached_eval mise mise activate zsh
+# Not cached: `mise activate` writes the PATH it starts from into its output,
+# so a cached copy reset every shell to a stale PATH and dropped whatever
+# .zshenv added (Maestri, Rex). Live it costs ~11ms.
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
 _cached_eval atuin atuin init zsh --disable-up-arrow        # Ctrl-R history TUI; up-arrow stays native
 
 # ─── Prompt ──────────────────────────────────────────────────────────────────
