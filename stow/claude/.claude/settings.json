@@ -32,9 +32,7 @@
     "deny": [
       "Bash(git push)",
       "Bash(git push*origin)",
-      "Bash(git push* HEAD)",
-      "Bash(git push* HEAD *)",
-      "Bash(git push* HEAD:*)",
+      "Bash(git push* HEAD*)",
       "Bash(git push* main)",
       "Bash(git push* main *)",
       "Bash(git push*:main)",
@@ -84,7 +82,6 @@
     "ask": [
       "Bash(git push* --delete *)",
       "Bash(git push* -d *)",
-      "Bash(git push* :*)",
       "Bash(gh secret set*)",
       "Bash(gh variable set*)",
       "Bash(vercel*--prod*)",
@@ -174,7 +171,14 @@
     },
     "excludedCommands": ["gh *", "docker *"],
     "network": {
-      "allowAllUnixSockets": true
+      "allowAllUnixSockets": true,
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "linhaai.com.br",
+        "www.linhaai.com.br",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ]
     }
   },
   "effortLevel": "high",
