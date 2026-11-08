@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# pre-push hook, registered for every repo by [hook "protect-main"] in
+# ~/.gitconfig. Refuses any push that updates or deletes main or master on the
+# remote, so changes land through a pull request. It runs alongside a repo's
+# own pre-push hook. Push anyway, as a human: git push --no-verify.
+set -euo pipefail
+
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main | refs/heads/master)
+      echo "protect-main: refusing to push to ${remote_ref#refs/heads/} on ${1:-the remote}. Open a pull request instead." >&2
+      echo "protect-main: if you really mean it, push it yourself with --no-verify." >&2
+      exit 1
+      ;;
+  esac
+done
