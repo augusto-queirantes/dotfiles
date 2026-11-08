@@ -76,6 +76,7 @@ dotfiles/
 │   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, output style
 └── bin/                  # personal scripts → ~/.local/bin
     ├── git-protect-main  # global pre-push hook: no pushes to main/master
+    ├── maestri-presets   # Maestri agent presets; run from a Maestro terminal
     └── tmux-sessionizer
 ```
 
