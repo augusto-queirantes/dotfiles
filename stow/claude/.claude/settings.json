@@ -17,6 +17,12 @@
     "defaultMode": "auto"
   },
   "model": "sonnet",
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "includeCoAuthoredBy": false,
   "hooks": {
     "SessionStart": [
       {
