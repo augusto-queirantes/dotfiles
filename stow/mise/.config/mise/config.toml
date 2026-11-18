@@ -8,3 +8,13 @@
 node = "26.12.0"
 ruby = "4.0.7"
 bun = "1.4.3"
+
+# conclave's QA role: page load at three speeds, HTML conformance and Chrome's
+# Modern Web Guidance. Installed through bun (see [settings]), never npm.
+"npm:lighthouse" = "13.6.0"
+"npm:html-validate" = "11.21.1"
+"npm:modern-web-guidance" = "1.0.1"
+
+[settings]
+# npm: tools install with bun, the package manager used everywhere here.
+npm.package_manager = "bun"
