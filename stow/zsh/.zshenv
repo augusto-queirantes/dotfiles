@@ -29,6 +29,15 @@ _rex_bin="/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/Ma
 [[ -x "$_rex_bin/rex" ]] && path=("$_rex_bin" $path)
 unset _rex_bin
 
+# Linha AI's agents, on Ground or on a Maestri floor, don't load the claude.ai
+# connectors (mail, calendar, Slack...): those are signed in to another
+# account. Only the process env works; a project's settings.json env doesn't.
+case $PWD in
+  "$HOME"/Personal/linha-* | "$HOME"/Personal/.maestri/floors/linha-*)
+    export ENABLE_CLAUDEAI_MCP_SERVERS=false
+    ;;
+esac
+
 # Machine-local env — API keys, tokens. Untracked; never put secrets in this
 # repo (it is public).
 [[ -f "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"

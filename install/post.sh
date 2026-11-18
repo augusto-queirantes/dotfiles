@@ -48,6 +48,11 @@ if command -v uv >/dev/null 2>&1; then
       claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files ||
         echo "claude mcp add semble failed — register it manually."
     fi
+    if ! claude mcp list 2>/dev/null | grep -q '^linear-server:'; then
+      echo "Registering the Linear MCP server with Claude Code (sign in with /mcp)..."
+      claude mcp add --transport http linear-server https://mcp.linear.app/mcp -s user ||
+        echo "claude mcp add linear-server failed — register it manually."
+    fi
   fi
 fi
 

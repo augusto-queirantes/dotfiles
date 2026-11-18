@@ -171,7 +171,14 @@
     },
     "excludedCommands": ["gh *", "docker *"],
     "network": {
-      "allowAllUnixSockets": true
+      "allowAllUnixSockets": true,
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "linhaai.com.br",
+        "www.linhaai.com.br",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ]
     }
   },
   "effortLevel": "high",
