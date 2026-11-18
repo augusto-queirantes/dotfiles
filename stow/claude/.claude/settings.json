@@ -1,4 +1,10 @@
 {
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
+  "includeCoAuthoredBy": false,
   "permissions": {
     "allow": [
       "WebSearch",
@@ -77,7 +83,16 @@
       "Bash(*DROP TABLE*)",
       "Bash(*drop table*)",
       "Bash(*TRUNCATE *)",
-      "Bash(*truncate table*)"
+      "Bash(*truncate table*)",
+      "Bash(gh issue delete*)",
+      "Bash(terraform destroy*)",
+      "Bash(*terraform*-destroy*)",
+      "Bash(aws * delete-*)",
+      "Bash(aws * terminate-*)",
+      "Bash(aws s3 rm*)",
+      "Bash(aws s3 rb*)",
+      "mcp__claude_ai_Github_MCP__merge_pull_request",
+      "mcp__claude_ai_Github_MCP__delete_repository"
     ],
     "ask": [
       "Bash(git push* --delete *)",
@@ -107,17 +122,51 @@
       "Bash(supabase functions deploy*)",
       "Bash(npx supabase*)",
       "Bash(bunx supabase*)",
-      "Bash(psql*supabase*)"
+      "Bash(psql*supabase*)",
+      "Bash(git push* staging)",
+      "Bash(git push* staging *)",
+      "Bash(git push*:staging)",
+      "Bash(git push*:staging *)",
+      "Bash(gh workflow run*production*)",
+      "Bash(gh workflow run*terraform*)",
+      "Bash(gh workflow run*migrate*)",
+      "Bash(gh workflow run*skip*)",
+      "Bash(gh pr review*)",
+      "Bash(gh pr close*)",
+      "Bash(gh issue close*)",
+      "Bash(gh api*/reviews/*/events*)",
+      "Bash(gh api*event=APPROVE*)",
+      "Bash(gh api*event=REQUEST_CHANGES*)",
+      "Bash(gh api*event=COMMENT*)",
+      "Bash(terraform apply*)",
+      "Bash(terraform import*)",
+      "Bash(terraform state *)",
+      "Bash(aws * create-*)",
+      "Bash(aws * put-*)",
+      "Bash(aws * update-*)",
+      "Bash(aws * start-*)",
+      "Bash(aws * stop-*)",
+      "Bash(aws * run-task*)",
+      "Bash(aws * execute-command*)",
+      "Bash(aws * send-command*)",
+      "Bash(aws * invoke*)",
+      "Bash(aws s3 cp*)",
+      "Bash(aws s3 mv*)",
+      "Bash(aws s3 sync*)",
+      "mcp__claude_ai_Slack__slack_send_message",
+      "mcp__claude_ai_Slack__slack_schedule_message",
+      "mcp__claude_ai_Slack__slack_create_canvas",
+      "mcp__claude_ai_Slack__slack_update_canvas",
+      "mcp__plugin_datadog_mcp__upsert_datadog_dashboard",
+      "mcp__plugin_datadog_mcp__delete_datadog_notebook",
+      "mcp__claude_ai_Github_MCP__pull_request_review_write",
+      "mcp__claude_ai_Github_MCP__create_or_update_file",
+      "mcp__claude_ai_Github_MCP__push_files",
+      "mcp__claude_ai_Github_MCP__delete_file"
     ],
     "defaultMode": "auto"
   },
   "model": "opus",
-  "attribution": {
-    "commit": "",
-    "pr": "",
-    "sessionUrl": false
-  },
-  "includeCoAuthoredBy": false,
   "hooks": {
     "SessionStart": [
       {
@@ -139,12 +188,13 @@
   "enabledPlugins": {
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "engineer@conclave": true,
     "datadog@claude-plugins-official": true,
-    "architect@conclave": true,
+    "project-manager@conclave": true,
     "qa@conclave": true,
-    "ship@conclave": true,
-    "house@conclave": true
+    "designer@conclave": true,
+    "git-ops@conclave": true,
+    "developer@conclave": true,
+    "docker@conclave": true
   },
   "extraKnownMarketplaces": {
     "conclave": {
@@ -155,6 +205,7 @@
       "autoUpdate": true
     }
   },
+  "outputStyle": "Simpler Answers",
   "sandbox": {
     "enabled": true,
     "credentials": {
@@ -218,6 +269,5 @@
       "Writing credentials, tokens, API keys, or any content read from `~/.zshenv.local`, `~/.ssh`, or `~/.aws` into the trusted repo — it is public (github.com/augusto-queirantes/dotfiles).",
       "Sending repo contents, file listings, or command output to public paste, gist, or snippet services."
     ]
-  },
-  "outputStyle": "Simpler Answers"
+  }
 }

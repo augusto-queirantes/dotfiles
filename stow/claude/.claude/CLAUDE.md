@@ -29,8 +29,8 @@ Default to the `semble` MCP tools (`mcp__semble__search`, `mcp__semble__find_rel
 `settings.json` sorts commands into three tiers:
 
 - **Operate** (runs freely): logs, inspection, preview deploys, listing migrations, and the repo's own deploy workflow (`gh workflow run deploy.yml`), which migrates and deploys what is already on `main`.
-- **Change production** (asks Augusto): production deploys or rollbacks from a CLI, env vars and secrets, applying migrations outside the deploy workflow, dumping a remote database.
-- **Destroy** (denied): pushing to `main`, force pushes, merging pull requests, and deleting repos, projects, domains, env vars, databases, schemas or tables.
+- **Change production** (asks Augusto): production deploys or rollbacks from a CLI, env vars and secrets, applying migrations outside the deploy workflow, dumping a remote database, pushing to a shared `staging` branch (it deploys), terraform applies, AWS writes, dispatching a workflow against production or past its CI gate, submitting a PR review, and posting to Slack.
+- **Destroy** (denied): pushing to `main`, force pushes, merging pull requests, terraform destroys, and deleting repos, issues, projects, domains, env vars, cloud resources, databases, schemas or tables.
 
 Push with an explicit branch name: `git push -u origin <branch>`. A bare `git push` or a `HEAD` refspec is denied, because it can't be told apart from a push to `main`. A global git pre-push hook also refuses pushes to `main` or `master` from any tool; `--no-verify` is denied.
 
