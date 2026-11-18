@@ -66,6 +66,21 @@ if command -v atuin >/dev/null 2>&1; then
   fi
 fi
 
+# gh: conclave's project manager moves tasks on GitHub Projects, which needs
+# the token's `project` scope, and `gh auth login` does not grant it unasked.
+# Signing in or refreshing opens the browser once; a token with it is left alone.
+if command -v gh >/dev/null 2>&1; then
+  if ! gh auth token --hostname github.com >/dev/null 2>&1; then
+    echo "Signing in to GitHub with the project scope..."
+    gh auth login --hostname github.com --git-protocol ssh --web --scopes project ||
+      echo "gh auth login failed — run 'gh auth login --scopes project' manually."
+  elif ! gh auth status --hostname github.com 2>/dev/null | grep -q "'project'"; then
+    echo "Adding the project scope to gh's token..."
+    gh auth refresh --hostname github.com --scopes project ||
+      echo "gh auth refresh failed — run 'gh auth refresh -s project' manually."
+  fi
+fi
+
 # git maintenance: launchd-scheduled prefetch + commit-graph. Registered in
 # ~/.gitconfig.local (untracked) so machine paths never land in the repo.
 # Add big/hot repos here as they appear.
