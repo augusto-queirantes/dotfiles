@@ -169,7 +169,7 @@
         }
       ]
     },
-    "excludedCommands": ["gh *", "docker *"],
+    "excludedCommands": ["gh *", "docker *", "agent-browser *", "lighthouse *"],
     "network": {
       "allowAllUnixSockets": true,
       "allowLocalBinding": true,
