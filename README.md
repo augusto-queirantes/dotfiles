@@ -64,7 +64,7 @@ dotfiles/
 ├── install/
 │   ├── bootstrap.sh      # xcode + brew + brew bundle
 │   ├── macos.sh          # macOS defaults
-│   └── post.sh           # TPM, mise, atuin import, gh scope, git maintenance, shell
+│   └── post.sh           # TPM, mise, Docker memory cap, atuin import, gh scope, git maintenance, shell
 ├── docs/                 # per-tool cheatsheets (tmux, nvim, …)
 ├── stow/                 # each subdir is a stow package
 │   ├── zsh/.zshrc + .zshenv + .zprofile

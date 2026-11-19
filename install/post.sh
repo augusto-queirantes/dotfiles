@@ -84,6 +84,24 @@ if command -v claude >/dev/null 2>&1; then
   done
 fi
 
+# Docker Desktop: cap its VM at 4 GiB and let Resource Saver pause it when idle,
+# so agents' stacks can't take the machine's memory. Docker keeps only the
+# settings that differ from its defaults in this file and writes it on first
+# launch, so a machine where it never ran gets the cap on the next run.
+DOCKER_SETTINGS="$HOME/Library/Group Containers/group.com.docker/settings-store.json"
+if [[ -f "$DOCKER_SETTINGS" ]]; then
+  if ! jq -e '.MemoryMiB == 4096 and .UseResourceSaver == true' "$DOCKER_SETTINGS" >/dev/null; then
+    echo "Capping Docker Desktop at 4 GiB with Resource Saver on (restart Docker Desktop to apply)..."
+    if settings="$(jq '.MemoryMiB = 4096 | .UseResourceSaver = true' "$DOCKER_SETTINGS")"; then
+      printf '%s\n' "$settings" >"$DOCKER_SETTINGS"
+    else
+      echo "Docker Desktop settings update failed — set Memory to 4 GB and turn on Resource Saver in its Settings."
+    fi
+  fi
+elif [[ -d /Applications/Docker.app ]]; then
+  echo "Open Docker Desktop once, then re-run 'make post' to cap its memory at 4 GiB."
+fi
+
 # atuin: one-time import of existing zsh history into its SQLite store.
 if command -v atuin >/dev/null 2>&1; then
   marker="$HOME/.local/share/atuin/.imported"
