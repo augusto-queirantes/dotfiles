@@ -14,6 +14,14 @@ presets=(
   "Claude Light|claude --model sonnet --effort medium"
   "Claude Plan|claude --permission-mode plan"
   "Shell|"
+  # conclave's roles. QA, Designer and Project Manager run in dontAsk with only
+  # their own skills allowed: a skill's allowed-tools approve its commands while
+  # it runs and anything else is refused, since a Bash(...) entry in a role's
+  # tools grants all of Bash. Developer needs all of Bash.
+  "Developer|claude --agent developer:developer"
+  'QA|claude --agent qa:qa --permission-mode dontAsk --allowedTools "Skill(qa:tech)" "Skill(qa:user)" "Skill(qa:report)"'
+  'Designer|claude --agent designer:designer --permission-mode dontAsk --allowedTools "Skill(designer:review)" "Skill(designer:contract)"'
+  'Project Manager|claude --agent project-manager:project-manager --permission-mode dontAsk --allowedTools "Skill(project-manager:milestone)" "Skill(project-manager:task)" "Skill(project-manager:move)" "Skill(project-manager:status)"'
 )
 
 # Maestri ships these; the agents here run on Claude Code only.
