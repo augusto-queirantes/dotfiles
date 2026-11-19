@@ -66,6 +66,8 @@ brew "ruby-lsp"
 
 # GUI apps
 cask "raycast"
+cask "docker-desktop"   # containers; conclave's docker action starts and stops them
+cask "google-chrome"    # the browser agent-browser and Lighthouse drive for conclave's QA
 
 # Font
 cask "font-jetbrains-mono-nerd-font"

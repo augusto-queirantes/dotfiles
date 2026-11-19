@@ -34,6 +34,13 @@ if command -v mise >/dev/null 2>&1; then
   done < <(mise ls ruby --installed 2>/dev/null | awk '{print $2}')
 fi
 
+# Claude Code: the native installer, which keeps it up to date on its own.
+if ! command -v claude >/dev/null 2>&1; then
+  echo "Installing Claude Code..."
+  curl -fsSL https://claude.ai/install.sh | bash || echo "Claude Code install failed — run 'curl -fsSL https://claude.ai/install.sh | bash' manually."
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
 # semble: install the CLI globally and register its MCP server with Claude Code.
 if command -v uv >/dev/null 2>&1; then
   if ! command -v semble >/dev/null 2>&1; then
@@ -53,7 +60,28 @@ if command -v uv >/dev/null 2>&1; then
       claude mcp add --transport http linear-server https://mcp.linear.app/mcp -s user ||
         echo "claude mcp add linear-server failed — register it manually."
     fi
+    if ! claude mcp list 2>/dev/null | grep -q '^posthog:'; then
+      echo "Registering the PostHog MCP server with Claude Code (sign in with /mcp)..."
+      claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user ||
+        echo "claude mcp add posthog failed — register it manually."
+    fi
   fi
+fi
+
+# conclave: the roles (each brings the actions it uses) and the Datadog plugin
+# the project manager reads metrics from. Installed plugins are left alone.
+if command -v claude >/dev/null 2>&1; then
+  if ! claude plugin marketplace list 2>/dev/null | grep -q '❯ conclave$'; then
+    echo "Adding the conclave marketplace..."
+    claude plugin marketplace add augusto-queirantes/conclave ||
+      echo "claude plugin marketplace add conclave failed — add it manually."
+  fi
+  for plugin in developer@conclave designer@conclave qa@conclave project-manager@conclave datadog@claude-plugins-official; do
+    if ! claude plugin list 2>/dev/null | grep -q "❯ $plugin$"; then
+      echo "Installing $plugin..."
+      claude plugin install "$plugin" --scope user || echo "claude plugin install $plugin failed — install it manually."
+    fi
+  done
 fi
 
 # atuin: one-time import of existing zsh history into its SQLite store.
