@@ -26,7 +26,7 @@ presets=(
   # "CTO" Maestri role, which starts it in <workspace>/.maestri/roles/<id>, so
   # ../../.. is the workspace's directory. It always runs in auto mode, so it
   # can question you; the allow rules skip the classifier for the hand-off.
-  'CTO|claude --agent cto:cto --permission-mode auto --add-dir ../../.. --allowedTools "Skill(cto:milestone)" "Skill(cto:task)" "Skill(cto:assign)" "Skill(cto:move)" "Skill(cto:status)" "Skill(maestri)" "Skill(maestri-chat)" "Skill(maestri-manager)" "Skill(maestri-workspace)" "Bash(maestri list)" "Bash(maestri floor list)" "Bash(maestri floor status *)" "Bash(maestri floor create *)" "Bash(maestri recruit *)" "Bash(maestri ask *)" "Bash(maestri check *)" "Bash(maestri note create *)" "Bash(maestri note read *)" "Bash(maestri note write *)" "Bash(maestri notify *)" "Bash(maestri say *)" "Bash(maestri recall *)" "Bash(git -C * fetch origin *)" "Bash(ls *)" "Bash(git -C * worktree add *)"'
+  'CTO|claude --agent cto:cto --permission-mode auto --add-dir ../../.. --allowedTools "Skill(cto:plan)" "Skill(cto:task)" "Skill(cto:assign)" "Skill(cto:validate)" "Skill(cto:move)" "Skill(cto:status)" "Skill(maestri)" "Skill(maestri-chat)" "Skill(maestri-manager)" "Skill(maestri-workspace)" "Bash(maestri list)" "Bash(maestri floor list)" "Bash(maestri floor status *)" "Bash(maestri floor create *)" "Bash(maestri recruit *)" "Bash(maestri ask *)" "Bash(maestri check *)" "Bash(maestri note create *)" "Bash(maestri note read *)" "Bash(maestri note write *)" "Bash(maestri notify *)" "Bash(maestri say *)" "Bash(maestri recall *)" "Bash(git -C * fetch origin *)" "Bash(ls *)" "Bash(git -C * worktree add *)"'
 )
 
 # Presets that run in Maestro mode.
