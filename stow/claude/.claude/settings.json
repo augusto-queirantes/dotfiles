@@ -189,12 +189,12 @@
     "ruby-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "datadog@claude-plugins-official": true,
-    "project-manager@conclave": true,
     "qa@conclave": true,
     "designer@conclave": true,
     "git-ops@conclave": true,
     "developer@conclave": true,
-    "docker@conclave": true
+    "docker@conclave": true,
+    "cto@conclave": true
   },
   "extraKnownMarketplaces": {
     "conclave": {
@@ -208,6 +208,16 @@
   "outputStyle": "Simpler Answers",
   "sandbox": {
     "enabled": true,
+    "network": {
+      "allowedDomains": [
+        "linhaai.com.br",
+        "www.linhaai.com.br",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ],
+      "allowAllUnixSockets": true,
+      "allowLocalBinding": true
+    },
     "credentials": {
       "files": [
         {
@@ -220,17 +230,13 @@
         }
       ]
     },
-    "excludedCommands": ["gh *", "docker *", "agent-browser *", "lighthouse *"],
-    "network": {
-      "allowAllUnixSockets": true,
-      "allowLocalBinding": true,
-      "allowedDomains": [
-        "linhaai.com.br",
-        "www.linhaai.com.br",
-        "fonts.googleapis.com",
-        "fonts.gstatic.com"
-      ]
-    }
+    "excludedCommands": [
+      "gh *",
+      "docker *",
+      "agent-browser *",
+      "lighthouse *",
+      "git -C * fetch origin *"
+    ]
   },
   "effortLevel": "high",
   "modelSettings": {
