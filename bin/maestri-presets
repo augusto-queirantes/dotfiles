@@ -14,23 +14,34 @@ presets=(
   "Claude Light|claude --model sonnet --effort medium"
   "Claude Plan|claude --permission-mode plan"
   "Shell|"
-  # conclave's roles. QA, Designer and Project Manager run in dontAsk with only
-  # their own skills allowed: a skill's allowed-tools approve its commands while
-  # it runs and anything else is refused, since a Bash(...) entry in a role's
-  # tools grants all of Bash. Developer needs all of Bash.
+  # conclave's roles. QA and Designer run in dontAsk with only their own skills
+  # allowed: a skill's allowed-tools approve its commands while it runs and
+  # anything else is refused, since a Bash(...) entry in a role's tools grants
+  # all of Bash. Developer needs all of Bash.
   "Developer|claude --agent developer:developer"
   'QA|claude --agent qa:qa --permission-mode dontAsk --allowedTools "Skill(qa:tech)" "Skill(qa:user)" "Skill(qa:report)"'
   'Designer|claude --agent designer:designer --permission-mode dontAsk --allowedTools "Skill(designer:review)" "Skill(designer:contract)"'
-  'Project Manager|claude --agent project-manager:project-manager --permission-mode dontAsk --allowedTools "Skill(project-manager:milestone)" "Skill(project-manager:task)" "Skill(project-manager:move)" "Skill(project-manager:status)"'
+  # The CTO is a Maestro: it makes a floor per task and recruits one Developer
+  # there, with the commands below allowed one by one. It runs with the global
+  # "CTO" Maestri role, which starts it in <workspace>/.maestri/roles/<id>, so
+  # ../../.. is the workspace's directory. It always runs in auto mode, so it
+  # can question you; the allow rules skip the classifier for the hand-off.
+  'CTO|claude --agent cto:cto --permission-mode auto --add-dir ../../.. --allowedTools "Skill(cto:plan)" "Skill(cto:task)" "Skill(cto:assign)" "Skill(cto:validate)" "Skill(cto:move)" "Skill(cto:status)" "Skill(maestri)" "Skill(maestri-chat)" "Skill(maestri-manager)" "Skill(maestri-workspace)" "Bash(maestri list)" "Bash(maestri floor list)" "Bash(maestri floor status *)" "Bash(maestri floor create *)" "Bash(maestri recruit *)" "Bash(maestri ask *)" "Bash(maestri check *)" "Bash(maestri note create *)" "Bash(maestri note read *)" "Bash(maestri note write *)" "Bash(maestri notify *)" "Bash(maestri say *)" "Bash(maestri recall *)" "Bash(git -C * fetch origin *)" "Bash(ls *)" "Bash(git -C * worktree add *)"'
 )
 
-# Maestri ships these; the agents here run on Claude Code only.
-unused=("Codex" "Antigravity" "OpenCode")
+# Presets that run in Maestro mode.
+maestros=("CTO")
+
+# Maestri ships the first three; the agents here run on Claude Code only.
+# Project Manager is the CTO's former name.
+unused=("Codex" "Antigravity" "OpenCode" "Project Manager")
 
 for entry in "${presets[@]}"; do
   name="${entry%%|*}"
   cmd="${entry#*|}"
-  args=(--maestro off --chat off --quick-start on)
+  maestro=off
+  [[ " ${maestros[*]} " == *" $name "* ]] && maestro=on
+  args=(--maestro "$maestro" --chat off --quick-start on)
   [[ -n "$cmd" ]] && args+=(--command "$cmd")
   if "$m" preset show "$name" >/dev/null 2>&1; then
     "$m" preset set "$name" "${args[@]}"
