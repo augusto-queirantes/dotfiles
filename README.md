@@ -75,6 +75,7 @@ dotfiles/
 │   ├── mise/.config/mise/config.toml
 │   └── claude/.claude/    # Claude Code: settings, CLAUDE.md, output style
 └── bin/                  # personal scripts → ~/.local/bin
+    ├── claude-guard      # Claude Code PreToolUse hook: no force pushes; only the CTO merges
     ├── git-protect-main  # global pre-push hook: no pushes to main/master
     ├── maestri-presets   # Maestri agent presets; run from a Maestro terminal
     └── tmux-sessionizer
