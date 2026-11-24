@@ -39,10 +39,6 @@
       "Bash(git push)",
       "Bash(git push*origin)",
       "Bash(git push* HEAD*)",
-      "Bash(git push* main)",
-      "Bash(git push* main *)",
-      "Bash(git push*:main)",
-      "Bash(git push*:main *)",
       "Bash(git push* --force)",
       "Bash(git push* --force *)",
       "Bash(git push* -f)",
@@ -246,7 +242,9 @@
       "docker *",
       "agent-browser *",
       "lighthouse *",
-      "git -C * fetch origin *"
+      "git -C * fetch origin *",
+      "git -C * push origin *",
+      "git -C * push -u origin *"
     ]
   },
   "effortLevel": "high",
