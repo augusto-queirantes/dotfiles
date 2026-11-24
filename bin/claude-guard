@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# PreToolUse hook for Bash in every Claude Code session (settings.json). It
+# refuses what a deny rule cannot tell apart, in any form (git -C <dir> push,
+# gh -R <repo> pr merge, gh api .../merge):
+# - a force push, in every session;
+# - merging a pull request, except in the CTO session, whose /cto:merge checks
+#   the repository's own rules first, and never with --admin.
+# The session's agent comes from Claude Code's hook input, not from the
+# command, so a session cannot claim to be the CTO. Exit 2 refuses the call.
+set -euo pipefail
+
+input=$(cat)
+agent=$(jq -r '.agent_type // ""' <<<"$input")
+cmd=$(jq -r '.tool_input.command // ""' <<<"$input")
+
+refuse() {
+  echo "claude-guard: $1" >&2
+  exit 2
+}
+
+git_push='(^|[^[:alnum:]_-])git([[:space:]]+-C[[:space:]]+[^[:space:]]+)*[[:space:]]+push([[:space:]]|$)'
+force='[[:space:]](--force|--force-with-lease|--force-if-includes|-f)([=[:space:]]|$)|[[:space:]]\+[^[:space:]]'
+merge='(^|[^[:alnum:]_-])gh[[:space:]].*pr[[:space:]]+merge([[:space:]]|$)|(^|[^[:alnum:]_-])gh[[:space:]]+api[[:space:]].*pulls/[^[:space:]]+/merge'
+
+if grep -Eq "$git_push" <<<"$cmd" && grep -Eq -- "$force" <<<"$cmd"; then
+  refuse "force pushes are refused in every session. Hand it to Augusto."
+fi
+
+if grep -Eq "$merge" <<<"$cmd"; then
+  [[ "$agent" == "cto:cto" ]] || refuse "only the CTO session merges pull requests. Hand it to Augusto."
+  if grep -Eq -- '[[:space:]]--admin([[:space:]]|$)' <<<"$cmd"; then
+    refuse "--admin merges past the repository's rules; refused."
+  fi
+fi
+
+exit 0
