@@ -2,8 +2,12 @@
 # pre-push hook, registered for every repo by [hook "protect-main"] in
 # ~/.gitconfig. Refuses any push that updates or deletes main or master on the
 # remote, so changes land through a pull request. It runs alongside a repo's
-# own pre-push hook. Push anyway, as a human: git push --no-verify.
+# own pre-push hook. Push anyway, as a human: git push --no-verify. The CTO's
+# Claude Code session (CLAUDE_CODE_AGENT=cto:cto, set by Claude Code) may push
+# to main; claude-guard refuses any command that sets that variable.
 set -euo pipefail
+
+[[ "${CLAUDE_CODE_AGENT:-}" == "cto:cto" ]] && exit 0
 
 while read -r _local_ref _local_sha remote_ref _remote_sha; do
   case "$remote_ref" in

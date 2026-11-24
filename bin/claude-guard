@@ -3,6 +3,9 @@
 # refuses what a deny rule cannot tell apart, in any form (git -C <dir> push,
 # gh -R <repo> pr merge, gh api .../merge):
 # - a force push, in every session;
+# - a push to main or master, except in the CTO session;
+# - setting CLAUDE_CODE_AGENT, which git-protect-main reads to let the CTO
+#   through, in every session;
 # - merging a pull request, except in the CTO session, whose /cto:merge checks
 #   the repository's own rules first, and never with --admin.
 # The session's agent comes from Claude Code's hook input, not from the
@@ -20,10 +23,19 @@ refuse() {
 
 git_push='(^|[^[:alnum:]_-])git([[:space:]]+-C[[:space:]]+[^[:space:]]+)*[[:space:]]+push([[:space:]]|$)'
 force='[[:space:]](--force|--force-with-lease|--force-if-includes|-f)([=[:space:]]|$)|[[:space:]]\+[^[:space:]]'
+main='[[:space:]:](refs/heads/)?(main|master)([[:space:]]|$)'
 merge='(^|[^[:alnum:]_-])gh[[:space:]].*pr[[:space:]]+merge([[:space:]]|$)|(^|[^[:alnum:]_-])gh[[:space:]]+api[[:space:]].*pulls/[^[:space:]]+/merge'
 
 if grep -Eq "$git_push" <<<"$cmd" && grep -Eq -- "$force" <<<"$cmd"; then
   refuse "force pushes are refused in every session. Hand it to Augusto."
+fi
+
+if grep -Eq 'CLAUDE_CODE_AGENT' <<<"$cmd"; then
+  refuse "a command may not set CLAUDE_CODE_AGENT; Claude Code sets it."
+fi
+
+if grep -Eq "$git_push" <<<"$cmd" && grep -Eq "$main" <<<"$cmd"; then
+  [[ "$agent" == "cto:cto" ]] || refuse "only the CTO session pushes to main or master. Open a pull request."
 fi
 
 if grep -Eq "$merge" <<<"$cmd"; then
