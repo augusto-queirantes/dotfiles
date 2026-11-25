@@ -1,7 +1,7 @@
 # Core
 brew "stow"
 brew "mise"
-brew "uv"               # Python runner; installs semble and runs its MCP via uvx
+brew "uv"               # Python runner: uv tool install, uvx
 
 # Shell extras
 brew "zsh-autosuggestions"
