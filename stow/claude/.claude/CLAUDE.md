@@ -20,10 +20,6 @@ Best code is code never written. Stop at the first rung that holds:
 - Examples description should be short, simple and straight foward
 - You should avoid every unnecesarry mock
 
-## Code search
-
-Default to the `semble` MCP tools (`mcp__semble__search`, `mcp__semble__find_related`) for any semantic question about a codebase. Fall back to `rg` only for exact literals, regexes, filename globs, or every-occurrence rename sweeps.
-
 ## Production and destructive actions
 
 `settings.json` sorts commands into three tiers:

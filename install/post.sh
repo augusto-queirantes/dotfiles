@@ -41,30 +41,17 @@ if ! command -v claude >/dev/null 2>&1; then
   export PATH="$HOME/.local/bin:$PATH"
 fi
 
-# semble: install the CLI globally and register its MCP server with Claude Code.
-if command -v uv >/dev/null 2>&1; then
-  if ! command -v semble >/dev/null 2>&1; then
-    echo "Installing semble..."
-    uv tool install semble || echo "semble install failed — re-run after fixing uv."
+# Claude Code: the MCP servers every session uses.
+if command -v claude >/dev/null 2>&1; then
+  if ! claude mcp list 2>/dev/null | grep -q '^linear-server:'; then
+    echo "Registering the Linear MCP server with Claude Code (sign in with /mcp)..."
+    claude mcp add --transport http linear-server https://mcp.linear.app/mcp -s user ||
+      echo "claude mcp add linear-server failed — register it manually."
   fi
-  if command -v claude >/dev/null 2>&1; then
-    if ! claude mcp list 2>/dev/null | grep -q '^semble:'; then
-      echo "Registering semble MCP server with Claude Code..."
-      # --include-text-files extends indexing to .md/.yaml/.json so docs + config
-      # are searchable through the same MCP call as source code.
-      claude mcp add semble -s user -- uvx --from "semble[mcp]" semble --include-text-files ||
-        echo "claude mcp add semble failed — register it manually."
-    fi
-    if ! claude mcp list 2>/dev/null | grep -q '^linear-server:'; then
-      echo "Registering the Linear MCP server with Claude Code (sign in with /mcp)..."
-      claude mcp add --transport http linear-server https://mcp.linear.app/mcp -s user ||
-        echo "claude mcp add linear-server failed — register it manually."
-    fi
-    if ! claude mcp list 2>/dev/null | grep -q '^posthog:'; then
-      echo "Registering the PostHog MCP server with Claude Code (sign in with /mcp)..."
-      claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user ||
-        echo "claude mcp add posthog failed — register it manually."
-    fi
+  if ! claude mcp list 2>/dev/null | grep -q '^posthog:'; then
+    echo "Registering the PostHog MCP server with Claude Code (sign in with /mcp)..."
+    claude mcp add --transport http posthog https://mcp.posthog.com/mcp -s user ||
+      echo "claude mcp add posthog failed — register it manually."
   fi
 fi
 

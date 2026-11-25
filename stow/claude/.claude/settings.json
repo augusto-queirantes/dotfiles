@@ -9,7 +9,6 @@
     "allow": [
       "WebSearch",
       "WebFetch",
-      "Bash(semble *)",
       "Bash(rg *)",
       "Bash(fd *)",
       "Bash(bat *)",
@@ -17,8 +16,6 @@
       "Bash(curl -sL *)",
       "Bash(curl -fsSL *)",
       "Bash(gh *)",
-      "mcp__semble__search",
-      "mcp__semble__find_related",
       "Bash(maestri *)",
       "Bash(vercel ls*)",
       "Bash(vercel list*)",

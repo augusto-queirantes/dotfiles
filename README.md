@@ -102,10 +102,6 @@ dotfiles/
 - **CLI:** ripgrep, fd, bat, eza, delta, difftastic, jq, yq, gh, lazygit,
   git-absorb, jj, btop, yazi (`y` cd-on-quit wrapper), dust, duf, sd,
   hyperfine, xh, glow, tree
-- **Code search for agents:** [semble](https://github.com/MinishLab/semble) —
-  installed via `uv tool install semble`, registered as a global Claude Code
-  MCP server; the global `CLAUDE.md` tells every session to prefer it
-  over `grep`+`Read` for semantic lookups.
 - **Other:** Raycast, JetBrainsMono Nerd Font
 - **AI assistant:** Claude Code with global `CLAUDE.md`, a default output
   style, statusline, and language server plugins (Ruby, TypeScript/JS).
@@ -131,10 +127,8 @@ session; worktrees share the repo's memory dir). Monthly ritual: open `/memory`
 in each active project and prune — stale facts accumulate otherwise. Opt a
 sensitive repo out with `{"autoMemoryEnabled": false}` in its settings.
 
-`install/post.sh` also runs `uv tool install semble` and `claude mcp add
-semble -s user -- uvx --from "semble[mcp]" semble --include-text-files` (both
-idempotent), so the semble CLI and its MCP server are available to every
-Claude Code session.
+`install/post.sh` also registers the Linear and PostHog MCP servers at user
+scope (idempotent), so every Claude Code session has them; sign in with `/mcp`.
 
 Feature worktrees are created by hand (`git worktree add`) plus
 `tmux-sessionizer` to open a session on the new directory.
