@@ -8,25 +8,31 @@ set -euo pipefail
 
 m="${MAESTRI_CLI:-maestri}"
 
-# name|command ("" is a plain shell)
+# name|command ("" is a plain shell). A $(...) stays literal here: the login
+# shell Maestri starts each preset in expands it.
+# shellcheck disable=SC2016
 presets=(
   "Claude Code|claude"
   "Claude Light|claude --model sonnet --effort medium"
   "Claude Plan|claude --permission-mode plan"
   "Shell|"
   # conclave's roles. QA and Designer run in dontAsk with only their own skills
-  # allowed: a skill's allowed-tools approve its commands while it runs and
-  # anything else is refused, since a Bash(...) entry in a role's tools grants
-  # all of Bash. Developer needs all of Bash.
+  # allowed: a skill's allowed-tools approve its commands for the turn that ran
+  # it and anything else is refused, since a Bash(...) entry in a role's tools
+  # grants all of Bash. QA also keeps its read-only browser commands between
+  # turns, and adds the sandbox's TMPDIR, where its runs write: under dontAsk a
+  # command reading a file outside the session's folders is refused. Developer
+  # needs all of Bash.
   "Developer|claude --agent developer:developer"
-  'QA|claude --agent qa:qa --permission-mode dontAsk --allowedTools "Skill(qa:tech)" "Skill(qa:user)" "Skill(qa:report)"'
+  'QA|claude --agent qa:qa --permission-mode dontAsk --add-dir "/tmp/claude-$(id -u)" --allowedTools "Skill(qa:tech)" "Skill(qa:user)" "Skill(qa:report)" "Bash(agent-browser:*)" "Bash(lighthouse:*)" "Bash(html-validate:*)" "Bash(modern-web-guidance:*)" "Bash(jq:*)" "Bash(printenv TMPDIR)" "Bash(mkdir -p:*)"'
   'Designer|claude --agent designer:designer --permission-mode dontAsk --allowedTools "Skill(designer:review)" "Skill(designer:contract)"'
   # The CTO is a Maestro: it makes a floor per task and recruits one Developer
   # there, with the commands below allowed one by one. It runs with the global
   # "CTO" Maestri role, which starts it in <workspace>/.maestri/roles/<id>, so
   # ../../.. is the workspace's directory. It always runs in auto mode, so it
-  # can question you; the allow rules skip the classifier for the hand-off.
-  'CTO|claude --agent cto:cto --permission-mode auto --add-dir ../../.. --allowedTools "Skill(cto:plan)" "Skill(cto:task)" "Skill(cto:assign)" "Skill(cto:validate)" "Skill(cto:move)" "Skill(cto:status)" "Skill(maestri)" "Skill(maestri-chat)" "Skill(maestri-manager)" "Skill(maestri-workspace)" "Bash(maestri list)" "Bash(maestri floor list)" "Bash(maestri floor status *)" "Bash(maestri floor create *)" "Bash(maestri recruit *)" "Bash(maestri ask *)" "Bash(maestri check *)" "Bash(maestri note create *)" "Bash(maestri note read *)" "Bash(maestri note write *)" "Bash(maestri notify *)" "Bash(maestri say *)" "Bash(maestri recall *)" "Bash(git -C * fetch origin *)" "Bash(ls *)" "Bash(git -C * worktree add *)"'
+  # can question you; the allow rules skip the classifier for the hand-off, its
+  # merges and its pushes (force pushes stay denied in settings.json).
+  'CTO|claude --agent cto:cto --permission-mode auto --add-dir ../../.. --allowedTools "Skill(cto:plan)" "Skill(cto:task)" "Skill(cto:assign)" "Skill(cto:validate)" "Skill(cto:merge)" "Skill(cto:move)" "Skill(cto:status)" "Skill(maestri)" "Skill(maestri-chat)" "Skill(maestri-manager)" "Skill(maestri-workspace)" "Bash(maestri list)" "Bash(maestri floor list)" "Bash(maestri floor status *)" "Bash(maestri floor create *)" "Bash(maestri recruit *)" "Bash(maestri ask *)" "Bash(maestri check *)" "Bash(maestri note create *)" "Bash(maestri note read *)" "Bash(maestri note write *)" "Bash(maestri notify *)" "Bash(maestri say *)" "Bash(maestri recall *)" "Bash(git -C * fetch origin *)" "Bash(ls *)" "Bash(git -C * worktree add *)" "Bash(git -C * push origin *)" "Bash(git -C * push -u origin *)"'
 )
 
 # Presets that run in Maestro mode.
